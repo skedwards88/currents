@@ -1,0 +1,15 @@
+{
+  "name": "Currents",
+  "short_name": "Currents",
+  "description": "A spatial puzzle",
+  "id": "?currents=20260905",
+  "dir": "auto",
+  "lang": "en-US",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "https://currents.twistedtrailgames.com",
+  "background_color": "#373647",
+  "theme_color": "#373647",
+  "shortcuts": [],
+  "categories": ["games", "puzzle"]
+}

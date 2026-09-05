@@ -2,8 +2,11 @@ export const featureToLetterLookup = {
   fish: "F",
   coral: "C",
   rock: "R",
-  whirlpool: "W",
-  stream: "S",
+  whirlpool: "P",
+  streamUp: "N",
+  streamDown: "S",
+  streamLeft: "W",
+  streamRight: "E",
 } as const;
 
 export type Feature = keyof typeof featureToLetterLookup;

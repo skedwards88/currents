@@ -4,12 +4,12 @@ import PWAInstall from "@skedwards88/shared-components/src/components/PWAInstall
 import MoreGames from "@skedwards88/shared-components/src/components/MoreGames";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import {useInstallPrompt} from "@skedwards88/shared-components/src/logic/handleInstall";
+import {gameReducer} from "../logic/gameReducer";
+import {gameInit} from "../logic/gameInit";
+import Game from "./Game";
 
 export type DisplayState =
-  | "heart"
-  | "installOverview"
-  | "pwaInstall"
-  | "game";
+  "heart" | "rules" | "installOverview" | "pwaInstall" | "game";
 
 export default function App(): React.JSX.Element {
   const {userId, sessionId} = useMetadataContext();
@@ -18,11 +18,15 @@ export default function App(): React.JSX.Element {
   const {installPromptEvent, showInstallButton, handleInstall} =
     useInstallPrompt({userId, sessionId});
 
-  const [display, setDisplay] = React.useState("game",
+  const [display, setDisplay] = React.useState<DisplayState>("game");
+
+  const [gameState, dispatchGameState] = React.useReducer(
+    gameReducer,
+    {},
+    gameInit,
   );
 
   switch (display) {
-
     case "heart":
       return (
         <MoreGames
@@ -33,6 +37,9 @@ export default function App(): React.JSX.Element {
           includeWordAttribution={false}
         ></MoreGames>
       );
+
+    case "rules":
+      return <div>TODO</div>;
 
     case "installOverview":
       return (
@@ -58,11 +65,12 @@ export default function App(): React.JSX.Element {
 
     default:
       return (
-        <div
-          className="App"
-          id="currents"
-        >Currents: under the sea (and under development)
-        </div>
+        <Game
+          remainingSweeps={gameState.remainingSweeps}
+          puzzleHistory={gameState.puzzleHistory}
+          setDisplay={setDisplay}
+          dispatchGameState={dispatchGameState}
+        ></Game>
       );
   }
 }

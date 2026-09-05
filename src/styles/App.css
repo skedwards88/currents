@@ -1,0 +1,37 @@
+html {
+  --square-size: min(19vw, 10vh);
+  --default-font-size: clamp(20px, 3.5vh, 27px);
+  --dark-color: rgb(53 43 194);
+  --light-color: rgb(149 216 223);
+
+  background-color: var(--dark-color);
+    color: white;
+  font-family: sans-serif;
+    font-size: var(--default-font-size);
+
+
+}
+
+.App {
+  height: 90vh; /* fallback if svh isn't handled */
+  height: 98svh;
+  width: 100%;
+  overflow: auto;
+}
+
+.info {
+  white-space: pre-line;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  font-size: calc(var(--default-font-size) * 0.7);
+}
+
+.infoText {
+  margin: 2vmax;
+}
+
+.info a {
+  color: rgb(0 162 255);
+}

@@ -1,0 +1,43 @@
+.controls {
+  grid-area: standardControls;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-bottom: 2px solid var(--light-color);
+}
+
+.controlButton {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 0;
+  width: calc(var(--square-size) * 0.4);
+  height: calc(var(--square-size) * 0.4);
+  background-color: transparent;
+  padding: 1px 6px;
+  margin: 10px
+}
+
+#resetButton {
+  background-image: url("@skedwards88/shared-components/src/images/icons/new_game.svg");
+}
+
+#undoButton {
+  background-image: url("@skedwards88/shared-components/src/images/icons/undo_arrow.svg");
+}
+
+#rulesButton {
+  background-image: url("@skedwards88/shared-components/src/images/icons/info.svg");
+}
+
+#heartButton {
+  background-image: url("@skedwards88/shared-components/src/images/icons/heart.svg");
+}
+
+#shareButton {
+  background-image: url("@skedwards88/shared-components/src/images/icons/share.svg");
+}
+
+#installButton {
+  background-image: url("@skedwards88/shared-components/src/images/icons/install.svg");
+}

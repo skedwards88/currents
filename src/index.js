@@ -1,6 +1,9 @@
 import {createRoot} from "react-dom/client";
 import React from "react";
 import App from "./components/App";
+import "./styles/App.css";
+import "./styles/Board.css";
+import "./styles/ControlBar.css";
 import "@skedwards88/shared-components/src/styles/MoreGames.css";
 import "@skedwards88/shared-components/src/styles/Install.css";
 import {MetadataContextProvider} from "@skedwards88/shared-components/src/components/MetadataContextProvider";

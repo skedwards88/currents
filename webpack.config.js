@@ -43,9 +43,7 @@ module.exports = (env, argv) => {
   });
 
   const copyPlugin = new CopyPlugin({
-    patterns: [
-      {from: "./src/manifest.json", to: "./assets/manifest.json"},
-    ],
+    patterns: [{from: "./src/manifest.json", to: "./assets/manifest.json"}],
     options: {
       concurrency: 100,
     },

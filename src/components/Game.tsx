@@ -1,7 +1,22 @@
+import type {Feature} from "../logic/gameInit";
 import {type GameState} from "../logic/gameInit";
 import {type ReducerPayload} from "../logic/gameReducer";
 import {type DisplayState} from "./App";
 import ControlBar from "./ControlBar";
+
+function Square({features}: {features: Feature[]}): React.JSX.Element {
+  const className = `square ${features.join(" ")}`;
+
+  return <div className={className}></div>;
+}
+
+function Board({puzzle}: {puzzle: Feature[][]}): React.JSX.Element {
+  const squares = puzzle.map((features, index) => (
+    <Square features={features} key={index}></Square>
+  ));
+
+  return <div id="board">{squares}</div>;
+}
 
 export default function Game({
   dispatchGameState,
@@ -36,7 +51,7 @@ export default function Game({
         <p>{`${remainingSweeps} sweeps`}</p>
       </div>
 
-      <div id="board"></div>
+      <Board puzzle={puzzleHistory[puzzleHistory.length - 1]}></Board>
     </div>
   );
 }

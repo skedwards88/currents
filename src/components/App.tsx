@@ -22,7 +22,7 @@ export default function App(): React.JSX.Element {
 
   const [gameState, dispatchGameState] = React.useReducer(
     gameReducer,
-    {},
+    {level: 1},
     gameInit,
   );
 

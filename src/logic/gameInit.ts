@@ -1,3 +1,6 @@
+import {convertStringToPuzzle} from "./convertStringToPuzzle";
+import {puzzles} from "./puzzles";
+
 export const featureToLetterLookup = {
   fish: "F",
   coral: "C",
@@ -7,7 +10,14 @@ export const featureToLetterLookup = {
   streamDown: "S",
   streamLeft: "W",
   streamRight: "E",
-} as const;
+};
+
+export const letterToFeatureLookup = Object.fromEntries(
+  Object.entries(featureToLetterLookup).map(([feature, letter]) => [
+    letter,
+    feature,
+  ]),
+);
 
 export type Feature = keyof typeof featureToLetterLookup;
 
@@ -17,10 +27,12 @@ export type GameState = {
   remainingSweeps: number;
 };
 
-export function gameInit(): GameState {
+export function gameInit({level}: {level: number}): GameState {
+  const puzzle = convertStringToPuzzle(puzzles[level - 1].puzzleString);
+
   return {
-    level: 1,
-    remainingSweeps: 5,
-    puzzleHistory: [[["fish", "coral"], []]],
+    level, // -1 because 0-indexed
+    remainingSweeps: puzzles[level - 1].maxSweeps,
+    puzzleHistory: [puzzle],
   };
 }

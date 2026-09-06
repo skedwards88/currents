@@ -1,3 +1,7 @@
+button:disabled {
+  opacity: .5
+}
+
 #game {
   display: grid;
     grid-template-areas:
@@ -44,6 +48,53 @@
   margin: 10px
 }
 
-button:disabled {
-  opacity: .5
+.square {
+  touch-action: none;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  box-sizing: border-box;
+}
+
+.square.fish {
+  background-image: url("../images/fish.png");
+  background-size: calc(100% - 10px);
+}
+
+.square.coral {
+  background-image: url("../images/coral.png");
+  background-size: calc(100% - 10px);
+}
+
+.square.rock {
+  background-image: url("../images/rock.png");
+  background-size: calc(100% - 10px);
+}
+
+.square.whirlpool {
+  background-image: url("../images/whirlpool.png");
+  background-size: calc(100% - 10px);
+}
+
+.square.streamUp {
+  background-image: url("../images/stream.png");
+  background-size: calc(100% - 10px);
+}
+
+.square.streamDown {
+  background-image: url("../images/stream.png");
+  background-size: calc(100% - 10px);
+  transform: rotate(180deg);
+}
+
+.square.streamLeft {
+  background-image: url("../images/stream.png");
+  background-size: calc(100% - 10px);
+  transform: rotate(90deg);
+}
+
+.square.streamRight {
+  background-image: url("../images/stream.png");
+  background-size: calc(100% - 10px);
+  transform: rotate(270deg);
 }

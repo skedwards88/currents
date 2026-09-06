@@ -1,4 +1,9 @@
-import {type Feature, letterToFeatureLookup} from "./gameInit";
+import {
+  type Feature,
+  letterToFeatureLookup,
+  numColumns,
+  numRows,
+} from "./gameInit";
 
 function padArray<T>(inputArray: T[], targetLength: number, fillValue: T): T[] {
   return Array.from({length: targetLength}, (_, i) =>
@@ -26,5 +31,5 @@ export function convertStringToPuzzle(puzzleString: string): Feature[][] {
     }
   }
 
-  return padArray(puzzle, 35, []);
+  return padArray(puzzle, numColumns * numRows, []);
 }

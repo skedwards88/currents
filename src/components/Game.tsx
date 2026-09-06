@@ -1,21 +1,79 @@
+import React from "react";
 import type {Feature} from "../logic/gameInit";
 import {type GameState} from "../logic/gameInit";
 import {type ReducerPayload} from "../logic/gameReducer";
 import {type DisplayState} from "./App";
 import ControlBar from "./ControlBar";
 
-function Square({features}: {features: Feature[]}): React.JSX.Element {
-  const className = `square ${features.join(" ")}`;
+export type Direction = "up" | "down" | "left" | "right";
+function Square({
+  features,
+  sweepDirection,
+}: {
+  features: Feature[];
+  sweepDirection: Direction;
+}): React.JSX.Element {
+  const className = `square ${sweepDirection} ${features.join(" ")}`;
 
   return <div className={className}></div>;
 }
 
-function Board({puzzle}: {puzzle: Feature[][]}): React.JSX.Element {
+function Board({
+  puzzle,
+  dispatchGameState,
+}: {
+  puzzle: Feature[][];
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+}): React.JSX.Element {
+  const sweepOrigin = React.useRef({x: 0, y: 0});
+
+  const [sweepDirection, setSweepDirection] =
+    React.useState<Direction>("right");
+
   const squares = puzzle.map((features, index) => (
-    <Square features={features} key={index}></Square>
+    <Square
+      features={features}
+      sweepDirection={sweepDirection}
+      key={index}
+    ></Square>
   ));
 
-  return <div id="board">{squares}</div>;
+  return (
+    <div
+      id="board"
+      onPointerDown={(event) => {
+        sweepOrigin.current = {x: event.screenX, y: event.screenY};
+
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }}
+      onPointerMove={(event) => {
+        const dx = event.screenX - sweepOrigin.current.x;
+        const dy = event.screenY - sweepOrigin.current.y;
+
+        const threshold =
+          event.currentTarget.getBoundingClientRect().width / 10;
+
+        if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) {
+          return;
+        }
+
+        let nextDirection: Direction;
+        if (Math.abs(dx) > Math.abs(dy)) {
+          nextDirection = dx > 0 ? "right" : "left";
+        } else {
+          nextDirection = dy > 0 ? "down" : "up";
+        }
+
+        setSweepDirection(nextDirection);
+      }}
+      onPointerUp={(event) => {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+        dispatchGameState({action: "move", direction: sweepDirection});
+      }}
+    >
+      {squares}
+    </div>
+  );
 }
 
 export default function Game({
@@ -51,7 +109,10 @@ export default function Game({
         <p>{`${remainingSweeps} sweeps`}</p>
       </div>
 
-      <Board puzzle={puzzleHistory[puzzleHistory.length - 1]}></Board>
+      <Board
+        puzzle={puzzleHistory[puzzleHistory.length - 1]}
+        dispatchGameState={dispatchGameState}
+      ></Board>
     </div>
   );
 }

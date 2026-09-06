@@ -1,6 +1,9 @@
 import {convertStringToPuzzle} from "./convertStringToPuzzle";
 import {puzzles} from "./puzzles";
 
+export const numRows = 7;
+export const numColumns = 5;
+
 export const featureToLetterLookup = {
   fish: "F",
   coral: "C",

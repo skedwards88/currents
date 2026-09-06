@@ -1,4 +1,5 @@
 import {convertStringToPuzzle} from "./convertStringToPuzzle";
+import {numColumns, numRows} from "./gameInit";
 
 describe("convertStringToPuzzle", () => {
   test("converts a string to a puzzle", () => {
@@ -50,15 +51,17 @@ describe("convertStringToPuzzle", () => {
 
     const puzzle = convertStringToPuzzle(puzzleString);
 
-    expect(puzzle).toEqual(Array.from({length: 35}, () => []));
+    expect(puzzle).toEqual(
+      Array.from({length: numColumns * numRows}, () => []),
+    );
   });
 
-  test("puzzle is padded with empty spaces at the end to reach 35 in length", () => {
+  test("puzzle is padded with empty spaces at the end to reach (numColumns * numRows) in length", () => {
     const puzzleString = "3F2R3";
 
     const puzzle = convertStringToPuzzle(puzzleString);
 
-    expect(puzzle.length).toBe(35);
+    expect(puzzle.length).toBe(numColumns * numRows);
   });
 
   test("works if the puzzle string is only numbers", () => {
@@ -66,7 +69,9 @@ describe("convertStringToPuzzle", () => {
 
     const puzzle = convertStringToPuzzle(puzzleString);
 
-    expect(puzzle).toEqual(Array.from({length: 35}, () => []));
+    expect(puzzle).toEqual(
+      Array.from({length: numColumns * numRows}, () => []),
+    );
   });
 
   test("works if the puzzle string is only features", () => {

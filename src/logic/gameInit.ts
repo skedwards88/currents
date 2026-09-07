@@ -22,7 +22,9 @@ export const letterToFeatureLookup = Object.fromEntries(
   ]),
 );
 
-export type Feature = keyof typeof featureToLetterLookup;
+type FeatureWithFish = keyof typeof featureToLetterLookup;
+
+export type Feature = Exclude<FeatureWithFish, "fish">;
 
 export type GameState = {
   level: number;

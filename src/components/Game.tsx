@@ -7,22 +7,26 @@ import ControlBar from "./ControlBar";
 
 export type Direction = "up" | "down" | "left" | "right";
 function Square({
-  features,
+  feature,
+  containsFish,
   sweepDirection,
 }: {
-  features: Feature[];
+  feature: Feature | null;
+  containsFish: boolean;
   sweepDirection: Direction;
 }): React.JSX.Element {
-  const className = `square ${sweepDirection} ${features.join(" ")}`;
+  const className = `square ${sweepDirection} ${feature ?? ""} ${containsFish ? "fish" : ""}`;
 
   return <div className={className}></div>;
 }
 
 function Board({
   puzzle,
+  fishIndexes,
   dispatchGameState,
 }: {
-  puzzle: Feature[][];
+  puzzle: GameState["puzzle"];
+  fishIndexes: GameState["fishHistory"][0];
   dispatchGameState: React.Dispatch<ReducerPayload>;
 }): React.JSX.Element {
   const sweepOrigin = React.useRef({x: 0, y: 0});
@@ -30,9 +34,10 @@ function Board({
   const [sweepDirection, setSweepDirection] =
     React.useState<Direction>("right");
 
-  const squares = puzzle.map((features, index) => (
+  const squares = puzzle.map((feature, index) => (
     <Square
-      features={features}
+      feature={feature}
+      containsFish={fishIndexes.includes(index)}
       sweepDirection={sweepDirection}
       key={index}
     ></Square>
@@ -80,10 +85,12 @@ export default function Game({
   dispatchGameState,
   setDisplay,
   remainingSweeps,
-  puzzleHistory,
+  fishHistory,
+  puzzle,
 }: {
   remainingSweeps: number;
-  puzzleHistory: GameState["puzzleHistory"];
+  fishHistory: GameState["fishHistory"];
+  puzzle: GameState["puzzle"];
   dispatchGameState: React.Dispatch<ReducerPayload>;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
 }): React.JSX.Element {
@@ -94,14 +101,14 @@ export default function Game({
       <div id="sweepControls">
         <button
           id="resetButton"
-          disabled={puzzleHistory.length === 1}
+          disabled={fishHistory.length === 1}
           onClick={() => {
             dispatchGameState({action: "reset"});
           }}
         ></button>
         <button
           id="undoButton"
-          disabled={puzzleHistory.length === 1}
+          disabled={fishHistory.length === 1}
           onClick={() => {
             dispatchGameState({action: "undo"});
           }}
@@ -110,7 +117,8 @@ export default function Game({
       </div>
 
       <Board
-        puzzle={puzzleHistory[puzzleHistory.length - 1]}
+        fishIndexes={fishHistory[fishHistory.length - 1]}
+        puzzle={puzzle}
         dispatchGameState={dispatchGameState}
       ></Board>
     </div>

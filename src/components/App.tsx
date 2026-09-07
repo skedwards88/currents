@@ -67,7 +67,8 @@ export default function App(): React.JSX.Element {
       return (
         <Game
           remainingSweeps={gameState.remainingSweeps}
-          puzzleHistory={gameState.puzzleHistory}
+          fishHistory={gameState.fishHistory}
+          puzzle={gameState.puzzle}
           setDisplay={setDisplay}
           dispatchGameState={dispatchGameState}
         ></Game>

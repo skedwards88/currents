@@ -1,4 +1,4 @@
-import {convertStringToPuzzle} from "./convertStringToPuzzle";
+import {convertStringToPuzzleAndFishIndexes} from "./convertStringToPuzzleAndFishIndexes";
 import {puzzles} from "./puzzles";
 
 export const numRows = 7;
@@ -26,16 +26,19 @@ export type Feature = keyof typeof featureToLetterLookup;
 
 export type GameState = {
   level: number;
-  puzzleHistory: Feature[][][];
+  puzzle: (Feature | null)[];
   remainingSweeps: number;
+  fishHistory: number[][];
 };
 
 export function gameInit({level}: {level: number}): GameState {
-  const puzzle = convertStringToPuzzle(puzzles[level - 1].puzzleString);
+  const [puzzleWithoutFish, startingFishIndexes] =
+    convertStringToPuzzleAndFishIndexes(puzzles[level - 1].puzzleString);
 
   return {
     level, // -1 because 0-indexed
     remainingSweeps: puzzles[level - 1].maxSweeps,
-    puzzleHistory: [puzzle],
+    fishHistory: [startingFishIndexes],
+    puzzle: puzzleWithoutFish,
   };
 }

@@ -6,7 +6,7 @@ button:disabled {
   display: grid;
     grid-template-areas:
     "standardControls"
-    "sweepControls"
+    "playControls"
     "board";
   grid-template-rows:
     auto
@@ -28,15 +28,15 @@ button:disabled {
   align-self: center;
 }
 
-#sweepControls {
-  grid-area: sweepControls;
+#playControls {
+  grid-area: playControls;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   font-size: calc(var(--square-size) * 0.6)
 }
 
-.sweepControlButton {
+.playControlButton {
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;

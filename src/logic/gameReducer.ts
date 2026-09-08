@@ -25,7 +25,7 @@ function getOpposingStream(
   }
 }
 
-function getFishIndexesAfterSweep(
+function getFishIndexesAfterSwipe(
   startingFishIndexes: number[],
   puzzle: (Feature | null)[],
   direction: Direction,
@@ -326,17 +326,17 @@ function getFishIndexUpdates(
   const fishIndexSteps: number[][] = [];
 
   // Move the fish based on the swipe
-  const fishIndexesAfterSweep = getFishIndexesAfterSweep(
+  const fishIndexesAfterSwipe = getFishIndexesAfterSwipe(
     startingFishIndexes,
     puzzle,
     direction,
   );
 
-  fishIndexSteps.push(fishIndexesAfterSweep);
+  fishIndexSteps.push(fishIndexesAfterSwipe);
 
   // Move the fish due to interaction with elements (whirlpools, streams)
   // Get a snapshot of each step for animation purposes
-  let fishIndexesAfterMovementStep = [...fishIndexesAfterSweep];
+  let fishIndexesAfterMovementStep = [...fishIndexesAfterSwipe];
   let whirlpoolHasBeenUsed = false;
   let elementInteractionIsComplete = false;
 
@@ -383,8 +383,8 @@ export function gameReducer(
   if (payload.action === "reset") {
     return {
       ...currentGameState,
-      remainingSweeps:
-        currentGameState.remainingSweeps +
+      remainingSwipes:
+        currentGameState.remainingSwipes +
         (currentGameState.fishHistory.length - 1),
       fishHistory: currentGameState.fishHistory.slice(0, 1),
     };
@@ -392,7 +392,7 @@ export function gameReducer(
   if (payload.action === "undo") {
     return {
       ...currentGameState,
-      remainingSweeps: currentGameState.remainingSweeps + 1,
+      remainingSwipes: currentGameState.remainingSwipes + 1,
       fishHistory: currentGameState.fishHistory.slice(
         0,
         Math.max(currentGameState.fishHistory.length - 1),
@@ -400,7 +400,7 @@ export function gameReducer(
     };
   }
   if (payload.action === "move") {
-    if (currentGameState.remainingSweeps === 0) {
+    if (currentGameState.remainingSwipes === 0) {
       return currentGameState;
     }
 
@@ -413,7 +413,7 @@ export function gameReducer(
       payload.direction,
     );
 
-    // Don't reduce sweeps if no movement is applicable
+    // Don't reduce swipes if no movement is applicable
     if (
       arraysMatchQ(
         updatedFishIndexes[updatedFishIndexes.length - 1],
@@ -425,7 +425,7 @@ export function gameReducer(
 
     return {
       ...currentGameState,
-      remainingSweeps: currentGameState.remainingSweeps - 1,
+      remainingSwipes: currentGameState.remainingSwipes - 1,
       fishHistory: [
         ...currentGameState.fishHistory,
         updatedFishIndexes[updatedFishIndexes.length - 1],

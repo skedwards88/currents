@@ -75,7 +75,7 @@ export default function App(): React.JSX.Element {
     default:
       return (
         <Game
-          remainingSweeps={gameState.remainingSweeps}
+          remainingSwipes={gameState.remainingSwipes}
           fishHistory={gameState.fishHistory}
           puzzle={gameState.puzzle}
           setDisplay={setDisplay}

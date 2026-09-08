@@ -4,18 +4,21 @@ import {type GameState} from "../logic/gameInit";
 import {type ReducerPayload} from "../logic/gameReducer";
 import {type DisplayState} from "./App";
 import ControlBar from "./ControlBar";
+import {levelCompleteQ} from "../logic/levelCompleteQ";
+import {puzzles} from "../logic/puzzles";
+import GameOver from "./GameOver";
 
 export type Direction = "up" | "down" | "left" | "right";
 function Square({
   feature,
   containsFish,
-  sweepDirection,
+  swipeDirection,
 }: {
   feature: Feature | null;
   containsFish: boolean;
-  sweepDirection: Direction;
+  swipeDirection: Direction;
 }): React.JSX.Element {
-  const className = `square ${sweepDirection} ${feature ?? ""} ${containsFish ? "fish" : ""}`;
+  const className = `square ${swipeDirection} ${feature ?? ""} ${containsFish ? "fish" : ""}`;
 
   return <div className={className}></div>;
 }
@@ -29,16 +32,16 @@ function Board({
   fishIndexes: GameState["fishHistory"][0];
   dispatchGameState: React.Dispatch<ReducerPayload>;
 }): React.JSX.Element {
-  const sweepOrigin = React.useRef({x: 0, y: 0});
+  const swipeOrigin = React.useRef({x: 0, y: 0});
 
-  const [sweepDirection, setSweepDirection] =
+  const [swipeDirection, setSwipeDirection] =
     React.useState<Direction>("right");
 
   const squares = puzzle.map((feature, index) => (
     <Square
       feature={feature}
       containsFish={fishIndexes.includes(index)}
-      sweepDirection={sweepDirection}
+      swipeDirection={swipeDirection}
       key={index}
     ></Square>
   ));
@@ -47,13 +50,13 @@ function Board({
     <div
       id="board"
       onPointerDown={(event) => {
-        sweepOrigin.current = {x: event.screenX, y: event.screenY};
+        swipeOrigin.current = {x: event.screenX, y: event.screenY};
 
         event.currentTarget.setPointerCapture(event.pointerId);
       }}
       onPointerMove={(event) => {
-        const dx = event.screenX - sweepOrigin.current.x;
-        const dy = event.screenY - sweepOrigin.current.y;
+        const dx = event.screenX - swipeOrigin.current.x;
+        const dy = event.screenY - swipeOrigin.current.y;
 
         const threshold =
           event.currentTarget.getBoundingClientRect().width / 10;
@@ -69,11 +72,11 @@ function Board({
           nextDirection = dy > 0 ? "down" : "up";
         }
 
-        setSweepDirection(nextDirection);
+        setSwipeDirection(nextDirection);
       }}
       onPointerUp={(event) => {
         event.currentTarget.releasePointerCapture(event.pointerId);
-        dispatchGameState({action: "move", direction: sweepDirection});
+        dispatchGameState({action: "move", direction: swipeDirection});
       }}
     >
       {squares}
@@ -84,23 +87,34 @@ function Board({
 export default function Game({
   dispatchGameState,
   setDisplay,
-  remainingSweeps,
+  remainingSwipes,
   fishHistory,
   puzzle,
+  level,
 }: {
-  remainingSweeps: number;
+  remainingSwipes: number;
   fishHistory: GameState["fishHistory"];
   puzzle: GameState["puzzle"];
   dispatchGameState: React.Dispatch<ReducerPayload>;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+  level: GameState["level"];
 }): React.JSX.Element {
-  return (
+  const fishIndexes = fishHistory[fishHistory.length - 1];
+
+  const levelComplete = levelCompleteQ(fishIndexes, puzzle);
+
+  const gameComplete = levelComplete && level === puzzles.length;
+
+  return gameComplete ? (
+    <GameOver dispatchGameState={dispatchGameState}></GameOver>
+  ) : (
     <div id="game" className="App">
       <ControlBar setDisplay={setDisplay}></ControlBar>
 
-      <div id="sweepControls">
+      <div id="playControls">
         <button
           id="resetButton"
+          className="playControlButton"
           disabled={fishHistory.length === 1}
           onClick={() => {
             dispatchGameState({action: "reset"});
@@ -108,16 +122,26 @@ export default function Game({
         ></button>
         <button
           id="undoButton"
+          className="playControlButton"
           disabled={fishHistory.length === 1}
           onClick={() => {
             dispatchGameState({action: "undo"});
           }}
         ></button>
-        <p>{`${remainingSweeps} sweeps`}</p>
+        {levelComplete ? (
+          <button
+            id="nextLevelButton"
+            onClick={() => dispatchGameState({action: "nextLevel"})}
+          >
+            Next level
+          </button>
+        ) : (
+          <p>{`${remainingSwipes} swipe${remainingSwipes === 1 ? "" : "s"}`}</p>
+        )}
       </div>
 
       <Board
-        fishIndexes={fishHistory[fishHistory.length - 1]}
+        fishIndexes={fishIndexes}
         puzzle={puzzle}
         dispatchGameState={dispatchGameState}
       ></Board>

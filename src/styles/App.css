@@ -5,11 +5,12 @@ html {
   --light-color: rgb(149 216 223);
 
   background-color: var(--dark-color);
-    color: white;
-  font-family: sans-serif;
-    font-size: var(--default-font-size);
-
-
+  color: white;
+  font-size: var(--default-font-size);
+  font-family: "Atma", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.1em;
 }
 
 .App {
@@ -17,6 +18,22 @@ html {
   height: 98svh;
   width: 100%;
   overflow: auto;
+}
+
+button {
+  all: unset;
+  text-decoration: none;
+  text-align: center;
+  appearance: none;
+  font-size: calc(var(--default-font-size) * 1);
+  background-color: gray;
+  border: 1px solid white;
+  border-radius: 5px;
+  color: white;
+  margin: 10px;
+  padding: 1px 6px;
+  width: fit-content;
+  height: calc(var(--square-size) * 0.6);
 }
 
 .info {

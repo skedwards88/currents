@@ -1,6 +1,6 @@
 import {arraysMatchQ} from "@skedwards88/word_logic";
 import {type Direction} from "../components/Game";
-import {type Feature, type GameState} from "./gameInit";
+import {gameInit, type Feature, type GameState} from "./gameInit";
 import {getNextIndex} from "./getNextIndex";
 
 function getOpposingStream(
@@ -25,7 +25,7 @@ function getOpposingStream(
   }
 }
 
-function getFishIndexesAfterSweep(
+function getFishIndexesAfterSwipe(
   startingFishIndexes: number[],
   puzzle: (Feature | null)[],
   direction: Direction,
@@ -326,17 +326,17 @@ function getFishIndexUpdates(
   const fishIndexSteps: number[][] = [];
 
   // Move the fish based on the swipe
-  const fishIndexesAfterSweep = getFishIndexesAfterSweep(
+  const fishIndexesAfterSwipe = getFishIndexesAfterSwipe(
     startingFishIndexes,
     puzzle,
     direction,
   );
 
-  fishIndexSteps.push(fishIndexesAfterSweep);
+  fishIndexSteps.push(fishIndexesAfterSwipe);
 
   // Move the fish due to interaction with elements (whirlpools, streams)
   // Get a snapshot of each step for animation purposes
-  let fishIndexesAfterMovementStep = [...fishIndexesAfterSweep];
+  let fishIndexesAfterMovementStep = [...fishIndexesAfterSwipe];
   let whirlpoolHasBeenUsed = false;
   let elementInteractionIsComplete = false;
 
@@ -372,7 +372,9 @@ export type ReducerPayload =
       action: "reset";
     }
   | {action: "undo"}
-  | {action: "move"; direction: Direction};
+  | {action: "move"; direction: Direction}
+  | {action: "nextLevel"}
+  | {action: "replay"};
 
 export function gameReducer(
   currentGameState: GameState,
@@ -381,8 +383,8 @@ export function gameReducer(
   if (payload.action === "reset") {
     return {
       ...currentGameState,
-      remainingSweeps:
-        currentGameState.remainingSweeps +
+      remainingSwipes:
+        currentGameState.remainingSwipes +
         (currentGameState.fishHistory.length - 1),
       fishHistory: currentGameState.fishHistory.slice(0, 1),
     };
@@ -390,7 +392,7 @@ export function gameReducer(
   if (payload.action === "undo") {
     return {
       ...currentGameState,
-      remainingSweeps: currentGameState.remainingSweeps + 1,
+      remainingSwipes: currentGameState.remainingSwipes + 1,
       fishHistory: currentGameState.fishHistory.slice(
         0,
         Math.max(currentGameState.fishHistory.length - 1),
@@ -398,7 +400,7 @@ export function gameReducer(
     };
   }
   if (payload.action === "move") {
-    if (currentGameState.remainingSweeps === 0) {
+    if (currentGameState.remainingSwipes === 0) {
       return currentGameState;
     }
 
@@ -411,7 +413,7 @@ export function gameReducer(
       payload.direction,
     );
 
-    // Don't reduce sweeps if no movement is applicable
+    // Don't reduce swipes if no movement is applicable
     if (
       arraysMatchQ(
         updatedFishIndexes[updatedFishIndexes.length - 1],
@@ -423,12 +425,16 @@ export function gameReducer(
 
     return {
       ...currentGameState,
-      remainingSweeps: currentGameState.remainingSweeps - 1,
+      remainingSwipes: currentGameState.remainingSwipes - 1,
       fishHistory: [
         ...currentGameState.fishHistory,
         updatedFishIndexes[updatedFishIndexes.length - 1],
       ],
     };
+  } else if (payload.action === "nextLevel") {
+    return gameInit({level: currentGameState.level + 1});
+  } else if (payload.action === "replay") {
+    return gameInit({level: 1});
   } else {
     console.log(
       `unknown action: ${(payload as unknown as {action: string}).action}`,

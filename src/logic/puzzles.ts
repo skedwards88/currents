@@ -85,9 +85,9 @@ export const puzzles: {maxSweeps: number; puzzleString: string}[] = [
     //Section: Rock and Slipstream, Solutino: RRL, Intent: Applies rock trumps slipstream (bottom fish stays in slipstream)
   },
   {
-    maxSweeps: 5,
+    maxSweeps: 4,
     puzzleString: "6FRC3C4N3FN",
-    //Section: Rock and Slipstream, Solutino: RDDRU, Intent: Harder Puzzle
+    //Section: Rock and Slipstream, Solutino: RDRU, Intent: Harder Puzzle
   },
   {
     maxSweeps: 6,
@@ -161,7 +161,7 @@ export const puzzles: {maxSweeps: number; puzzleString: string}[] = [
   },
   {
     maxSweeps: 5,
-    puzzleString: "17PCR1FRFC2PNC2F1R",
+    puzzleString: "17PCR1FR1C2PNC2FFR",
     //Section: Whirlpool, Solutino: URRDR, Intent: Hardest puzzle, applies most concepts
   },
   {

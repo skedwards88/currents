@@ -33,6 +33,7 @@ function Board({
   dispatchGameState: React.Dispatch<ReducerPayload>;
 }): React.JSX.Element {
   const swipeOrigin = React.useRef({x: 0, y: 0});
+  const isSwiping = React.useRef(false);
 
   const [swipeDirection, setSwipeDirection] =
     React.useState<Direction>("right");
@@ -65,6 +66,8 @@ function Board({
           return;
         }
 
+        isSwiping.current = true;
+
         let nextDirection: Direction;
         if (Math.abs(dx) > Math.abs(dy)) {
           nextDirection = dx > 0 ? "right" : "left";
@@ -76,7 +79,12 @@ function Board({
       }}
       onPointerUp={(event) => {
         event.currentTarget.releasePointerCapture(event.pointerId);
-        dispatchGameState({action: "move", direction: swipeDirection});
+
+        if (isSwiping.current) {
+          dispatchGameState({action: "move", direction: swipeDirection});
+        }
+
+        isSwiping.current = false;
       }}
     >
       {squares}

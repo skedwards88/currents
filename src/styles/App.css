@@ -7,7 +7,7 @@ html {
   background-color: var(--dark-color);
   color: white;
   font-size: var(--default-font-size);
-  font-family: "Atma", system-ui;
+  font-family: Atma, system-ui;
   font-weight: 400;
   font-style: normal;
   letter-spacing: 0.1em;

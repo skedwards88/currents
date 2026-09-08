@@ -3,6 +3,7 @@ import React from "react";
 import App from "./components/App";
 import "./styles/App.css";
 import "./styles/Board.css";
+import "./styles/GameOver.css";
 import "./styles/ControlBar.css";
 import "@skedwards88/shared-components/src/styles/MoreGames.css";
 import "@skedwards88/shared-components/src/styles/Install.css";

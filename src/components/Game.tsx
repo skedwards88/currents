@@ -4,6 +4,9 @@ import {type GameState} from "../logic/gameInit";
 import {type ReducerPayload} from "../logic/gameReducer";
 import {type DisplayState} from "./App";
 import ControlBar from "./ControlBar";
+import {levelCompleteQ} from "../logic/levelCompleteQ";
+import {puzzles} from "../logic/puzzles";
+import GameOver from "./GameOver";
 
 export type Direction = "up" | "down" | "left" | "right";
 function Square({
@@ -87,20 +90,31 @@ export default function Game({
   remainingSweeps,
   fishHistory,
   puzzle,
+  level,
 }: {
   remainingSweeps: number;
   fishHistory: GameState["fishHistory"];
   puzzle: GameState["puzzle"];
   dispatchGameState: React.Dispatch<ReducerPayload>;
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
+  level: GameState["level"];
 }): React.JSX.Element {
-  return (
+  const fishIndexes = fishHistory[fishHistory.length - 1];
+
+  const levelComplete = levelCompleteQ(fishIndexes, puzzle);
+
+  const gameComplete = levelComplete && level === puzzles.length;
+
+  return gameComplete ? (
+    <GameOver dispatchGameState={dispatchGameState}></GameOver>
+  ) : (
     <div id="game" className="App">
       <ControlBar setDisplay={setDisplay}></ControlBar>
 
       <div id="sweepControls">
         <button
           id="resetButton"
+          className="sweepControlButton"
           disabled={fishHistory.length === 1}
           onClick={() => {
             dispatchGameState({action: "reset"});
@@ -108,16 +122,26 @@ export default function Game({
         ></button>
         <button
           id="undoButton"
+          className="sweepControlButton"
           disabled={fishHistory.length === 1}
           onClick={() => {
             dispatchGameState({action: "undo"});
           }}
         ></button>
-        <p>{`${remainingSweeps} sweeps`}</p>
+        {levelComplete ? (
+          <button
+            id="nextLevelButton"
+            onClick={() => dispatchGameState({action: "nextLevel"})}
+          >
+            Next level
+          </button>
+        ) : (
+          <p>{`${remainingSweeps} sweep${remainingSweeps === 1 ? "" : "s"}`}</p>
+        )}
       </div>
 
       <Board
-        fishIndexes={fishHistory[fishHistory.length - 1]}
+        fishIndexes={fishIndexes}
         puzzle={puzzle}
         dispatchGameState={dispatchGameState}
       ></Board>

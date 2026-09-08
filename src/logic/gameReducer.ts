@@ -1,6 +1,6 @@
 import {arraysMatchQ} from "@skedwards88/word_logic";
 import {type Direction} from "../components/Game";
-import {type Feature, type GameState} from "./gameInit";
+import {gameInit, type Feature, type GameState} from "./gameInit";
 import {getNextIndex} from "./getNextIndex";
 
 function getOpposingStream(
@@ -372,7 +372,9 @@ export type ReducerPayload =
       action: "reset";
     }
   | {action: "undo"}
-  | {action: "move"; direction: Direction};
+  | {action: "move"; direction: Direction}
+  | {action: "nextLevel"}
+  | {action: "replay"};
 
 export function gameReducer(
   currentGameState: GameState,
@@ -429,6 +431,10 @@ export function gameReducer(
         updatedFishIndexes[updatedFishIndexes.length - 1],
       ],
     };
+  } else if (payload.action === "nextLevel") {
+    return gameInit({level: currentGameState.level + 1});
+  } else if (payload.action === "replay") {
+    return gameInit({level: 1});
   } else {
     console.log(
       `unknown action: ${(payload as unknown as {action: string}).action}`,

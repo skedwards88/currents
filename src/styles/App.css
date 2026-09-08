@@ -19,6 +19,23 @@ html {
   overflow: auto;
 }
 
+button {
+  all: unset;
+  text-decoration: none;
+  text-align: center;
+  appearance: none;
+  font-size: calc(var(--default-font-size) * 1);
+  font-family: sans-serif;
+  background-color: gray;
+  border: 1px solid white;
+  border-radius: 5px;
+  color: white;
+  margin: 10px;
+  padding: 1px 6px;
+  width: fit-content;
+  height: calc(var(--square-size) * 0.6);
+}
+
 .info {
   white-space: pre-line;
   display: flex;

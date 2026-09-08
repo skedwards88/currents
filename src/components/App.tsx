@@ -71,6 +71,7 @@ export default function App(): React.JSX.Element {
           puzzle={gameState.puzzle}
           setDisplay={setDisplay}
           dispatchGameState={dispatchGameState}
+          level={gameState.level}
         ></Game>
       );
   }

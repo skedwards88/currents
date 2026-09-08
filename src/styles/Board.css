@@ -36,7 +36,7 @@ button:disabled {
   font-size: calc(var(--square-size) * 0.6)
 }
 
-#sweepControls > button {
+.sweepControlButton {
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -44,8 +44,6 @@ button:disabled {
   width: calc(var(--square-size) * 0.6);
   height: calc(var(--square-size) * 0.6);
   background-color: transparent;
-  padding: 1px 6px;
-  margin: 10px
 }
 
 .square {

@@ -1,7 +1,7 @@
 export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
   {
-    maxSwipes: 2,
-    puzzleString: "7C9F",
+    maxSwipes: 20,
+    puzzleString: "7C9FRNSEWPP",
     //Section: Coral, Solution: UU, Intent: Teaches swipe and goal
   },
   {

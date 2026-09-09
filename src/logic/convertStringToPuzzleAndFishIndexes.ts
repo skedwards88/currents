@@ -1,5 +1,6 @@
 import {
   type Feature,
+  type GameState,
   letterToFeatureLookup,
   numColumns,
   numRows,
@@ -13,14 +14,14 @@ function padArray<T>(inputArray: T[], targetLength: number, fillValue: T): T[] {
 
 export function convertStringToPuzzleAndFishIndexes(
   puzzleString: string,
-): [(Feature | null)[], number[]] {
+): [GameState["puzzle"], GameState["fishHistory"][0]] {
   // Non-letter/numbers are omitted. Consecutive numbers are kept together.
   const symbols = (puzzleString.match(/\d+|[A-Za-z]/g) ?? []).map((item) =>
     /^\d+$/.test(item) ? Number(item) : item,
   );
 
-  let puzzle: (Feature | null)[] = [];
-  const fishIndexes: number[] = [];
+  let puzzle: GameState["puzzle"] = [];
+  const fishIndexes: GameState["fishHistory"][0] = [];
 
   for (const symbol of symbols) {
     if (typeof symbol === "number") {

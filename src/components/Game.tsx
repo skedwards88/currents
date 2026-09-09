@@ -23,6 +23,25 @@ function Square({
   return <div className={className}></div>;
 }
 
+function RemainingSwipes({
+  remainingSwipes,
+}: {
+  remainingSwipes: number;
+}): React.JSX.Element {
+  const className =
+    remainingSwipes === 0
+      ? "errorText"
+      : remainingSwipes === 1
+        ? "warningText"
+        : "";
+
+  return (
+    <p
+      className={className}
+    >{`${remainingSwipes} swipe${remainingSwipes === 1 ? "" : "s"}`}</p>
+  );
+}
+
 function Board({
   puzzle,
   fishIndexes,
@@ -144,7 +163,7 @@ export default function Game({
             Next level
           </button>
         ) : (
-          <p>{`${remainingSwipes} swipe${remainingSwipes === 1 ? "" : "s"}`}</p>
+          <RemainingSwipes remainingSwipes={remainingSwipes} />
         )}
       </div>
 

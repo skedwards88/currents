@@ -106,14 +106,22 @@ button:disabled {
   background-size: calc(100% - 10px);
 }
 
-.square.fish.down {
-    transform: rotate(90deg);
+.square.fish.down::after {
+  transform: rotate(90deg);
 }
 
-.square.fish.up {
-    transform: rotate(270deg);
+.square.fish.up::after {
+  transform: rotate(270deg);
 }
 
-.square.fish.left {
-    transform: rotate(180deg);
+.square.fish.left::after {
+  transform: rotateY(180deg);
+}
+
+.errorText {
+  color: red;
+}
+
+.warningText {
+  color: pink;
 }

@@ -26,10 +26,10 @@ function getOpposingStream(
 }
 
 function getFishIndexesAfterSwipe(
-  startingFishIndexes: number[],
-  puzzle: (Feature | null)[],
+  startingFishIndexes: GameState["fishHistory"][0],
+  puzzle: GameState["puzzle"],
   direction: Direction,
-): number[] {
+): GameState["fishHistory"][0] {
   // figure out the index where the fish should move if unblocked
   const targetFishIndexes = startingFishIndexes.map((startingIndex) =>
     getNextIndex(startingIndex, direction),
@@ -95,10 +95,10 @@ function getFishIndexesAfterSwipe(
 }
 
 function getFishIndexesAfterElementStep(
-  startingFishIndexes: number[],
-  puzzle: (Feature | null)[],
+  startingFishIndexes: GameState["fishHistory"][0],
+  puzzle: GameState["puzzle"],
   whirlpoolHasBeenUsed: boolean,
-): [number[], boolean] {
+): [GameState["fishHistory"][0], boolean] {
   // Gets a single animation step for element interaction
   // Rules:
   // - Process the fish in order 0..34
@@ -230,8 +230,8 @@ function getFishIndexesAfterElementStep(
 function fishPushValidQ(
   pushedFishIndex: number,
   direction: Direction,
-  fishIndexes: number[],
-  puzzle: (Feature | null)[],
+  fishIndexes: GameState["fishHistory"][0],
+  puzzle: GameState["puzzle"],
 ): boolean {
   const targetIndex = getNextIndex(pushedFishIndex, direction);
 
@@ -275,9 +275,9 @@ function fishPushValidQ(
 function pushFish(
   pushedFishIndex: number,
   direction: Direction,
-  fishIndexes: number[],
-  puzzle: (Feature | null)[],
-): number[] {
+  fishIndexes: GameState["fishHistory"][0],
+  puzzle: GameState["puzzle"],
+): GameState["fishHistory"][0] {
   // Push a fish in a direction. If a fish is in the new location, push that fish as well
   // Doesn't push the fish if any fish in the chain of pushing can't be pushed
 
@@ -319,8 +319,8 @@ function pushFish(
 }
 
 function getFishIndexUpdates(
-  startingFishIndexes: number[],
-  puzzle: (Feature | null)[],
+  startingFishIndexes: GameState["fishHistory"][0],
+  puzzle: GameState["puzzle"],
   direction: Direction,
 ): number[][] {
   const fishIndexSteps: number[][] = [];

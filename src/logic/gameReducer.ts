@@ -318,7 +318,7 @@ function pushFish(
   return newFishIndexes;
 }
 
-function getFishIndexUpdates(
+export function getFishIndexUpdates(
   startingFishIndexes: GameState["fishHistory"][0],
   puzzle: GameState["puzzle"],
   direction: Direction,
@@ -372,7 +372,7 @@ export type ReducerPayload =
       action: "reset";
     }
   | {action: "undo"}
-  | {action: "move"; direction: Direction}
+  | {action: "move"; newIndexes: number[]}
   | {action: "nextLevel"}
   | {action: "replay"};
 
@@ -400,36 +400,10 @@ export function gameReducer(
     };
   }
   if (payload.action === "move") {
-    if (currentGameState.remainingSwipes === 0) {
-      return currentGameState;
-    }
-
-    const currentFishIndexes =
-      currentGameState.fishHistory[currentGameState.fishHistory.length - 1];
-
-    const updatedFishIndexes = getFishIndexUpdates(
-      currentFishIndexes,
-      currentGameState.puzzle,
-      payload.direction,
-    );
-
-    // Don't reduce swipes if no movement is applicable
-    if (
-      arraysMatchQ(
-        updatedFishIndexes[updatedFishIndexes.length - 1],
-        currentFishIndexes,
-      )
-    ) {
-      return currentGameState;
-    }
-
     return {
       ...currentGameState,
       remainingSwipes: currentGameState.remainingSwipes - 1,
-      fishHistory: [
-        ...currentGameState.fishHistory,
-        updatedFishIndexes[updatedFishIndexes.length - 1],
-      ],
+      fishHistory: [...currentGameState.fishHistory, payload.newIndexes],
     };
   } else if (payload.action === "nextLevel") {
     return gameInit({level: currentGameState.level + 1});

@@ -1,12 +1,13 @@
 import React from "react";
 import type {Feature} from "../logic/gameInit";
 import {type GameState} from "../logic/gameInit";
-import {type ReducerPayload} from "../logic/gameReducer";
+import {getFishIndexUpdates, type ReducerPayload} from "../logic/gameReducer";
 import {type DisplayState} from "./App";
 import ControlBar from "./ControlBar";
 import {levelCompleteQ} from "../logic/levelCompleteQ";
 import {puzzles} from "../logic/puzzles";
 import GameOver from "./GameOver";
+import {arraysMatchQ} from "@skedwards88/word_logic";
 
 export type Direction = "up" | "down" | "left" | "right";
 function Square({
@@ -45,9 +46,11 @@ function RemainingSwipes({
 function Board({
   puzzle,
   fishIndexes,
+  remainingSwipes,
   dispatchGameState,
 }: {
   puzzle: GameState["puzzle"];
+  remainingSwipes: GameState["remainingSwipes"];
   fishIndexes: GameState["fishHistory"][0];
   dispatchGameState: React.Dispatch<ReducerPayload>;
 }): React.JSX.Element {
@@ -99,8 +102,24 @@ function Board({
       onPointerUp={(event) => {
         event.currentTarget.releasePointerCapture(event.pointerId);
 
-        if (isSwiping.current) {
-          dispatchGameState({action: "move", direction: swipeDirection});
+        if (isSwiping.current && remainingSwipes > 0) {
+          const animationSteps = getFishIndexUpdates(
+            fishIndexes,
+            puzzle,
+            swipeDirection,
+          );
+
+          const newIndexes = animationSteps[animationSteps.length - 1];
+
+          // Don't bother moving (or deducting a swipe) if no movement is applicable
+          if (
+            animationSteps.length === 1 &&
+            arraysMatchQ(newIndexes, fishIndexes)
+          ) {
+            return;
+          }
+
+          dispatchGameState({action: "move", newIndexes});
         }
 
         isSwiping.current = false;
@@ -171,6 +190,7 @@ export default function Game({
         fishIndexes={fishIndexes}
         puzzle={puzzle}
         dispatchGameState={dispatchGameState}
+        remainingSwipes={remainingSwipes}
       ></Board>
     </div>
   );

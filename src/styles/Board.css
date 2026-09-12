@@ -18,14 +18,19 @@ button:disabled {
   touch-action: none;
   grid-area: board;
   display: grid;
-  grid-template-columns: repeat(5, var(--square-size));
-  grid-template-rows: repeat(7, var(--square-size));
   justify-content: center;
   background-color: var(--light-color);
   width: fit-content;
   height: fit-content;
   justify-self: center;
   align-self: center;
+}
+
+#fishSquares, #featureSquares {
+  display: grid;
+  grid-template-columns: repeat(5, var(--square-size));
+  grid-template-rows: repeat(7, var(--square-size));
+  grid-area: 1 / 1 / 2 / 2;
 }
 
 #playControls {

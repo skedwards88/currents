@@ -49,18 +49,27 @@ function getKeyframesForPath(
 
   return `\n@keyframes ${getAnimationNameFromPath(path)} {\n${frames}\n}`;
 }
-function Square({
+
+function FeatureSquare({
   feature,
+}: {
+  feature: Feature | null;
+}): React.JSX.Element {
+  const className = `square ${feature ?? ""}`;
+
+  return <div className={className}></div>;
+}
+
+function FishSquare({
   containsFish,
   swipeDirection,
   ref,
 }: {
-  feature: Feature | null;
   containsFish: boolean;
   swipeDirection: Direction;
   ref: React.Ref<HTMLDivElement>;
 }): React.JSX.Element {
-  const className = `square ${swipeDirection} ${feature ?? ""} ${containsFish ? "fish" : ""}`;
+  const className = `square ${swipeDirection} ${containsFish ? "fish" : ""}`;
 
   return <div className={className} ref={ref}></div>;
 }
@@ -145,14 +154,17 @@ export default function Board({
     });
   }, [animationPaths]);
 
-  const squares = puzzle.map((feature, index) => (
-    <Square
-      feature={feature}
+  const fishSquares = puzzle.map((_, index) => (
+    <FishSquare
       containsFish={fishIndexes.includes(index)}
       swipeDirection={swipeDirection}
       key={index}
       ref={squareRefCallbacks[index]}
-    ></Square>
+    ></FishSquare>
+  ));
+
+  const featureSquares = puzzle.map((feature, index) => (
+    <FeatureSquare feature={feature} key={index}></FeatureSquare>
   ));
 
   return (
@@ -218,7 +230,8 @@ export default function Board({
     >
       {/* for the generated animation keyframes */}
       <style ref={styleRef} />
-      {squares}
+      <div id="fishSquares">{fishSquares}</div>
+      <div id="featureSquares">{featureSquares}</div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import {type Direction} from "../components/Game";
+import {type Direction} from "../components/Board";
 import {numColumns, numRows} from "./gameInit";
 
 // Gets the row index of an index in a flat array assuming the array represents a grid of the specified number of columns

@@ -1,5 +1,5 @@
 import {arraysMatchQ} from "@skedwards88/word_logic";
-import {type Direction} from "../components/Game";
+import {type Direction} from "../components/Board";
 import {gameInit, type Feature, type GameState} from "./gameInit";
 import {getNextIndex} from "./getNextIndex";
 

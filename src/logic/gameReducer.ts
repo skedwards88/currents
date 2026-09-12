@@ -323,7 +323,7 @@ export function getFishIndexUpdates(
   puzzle: GameState["puzzle"],
   direction: Direction,
 ): number[][] {
-  const fishIndexSteps: number[][] = [];
+  const fishIndexSteps: number[][] = [[...startingFishIndexes]];
 
   // Move the fish based on the swipe
   const fishIndexesAfterSwipe = getFishIndexesAfterSwipe(

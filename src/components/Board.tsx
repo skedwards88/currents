@@ -6,14 +6,22 @@ import {getFishIndexUpdates, type ReducerPayload} from "../logic/gameReducer";
 
 export type Direction = "up" | "down" | "left" | "right";
 
+function indexToColumn(index: number): number {
+  return index % numColumns;
+}
+
+function indexToRow(index: number): number {
+  return Math.floor(index / numColumns);
+}
+
 function getXYForIndex(
   index: number,
   boardX: number,
   boardY: number,
   squareWidth: number,
 ): {x: number; y: number} {
-  const colIndex = index % numColumns;
-  const rowIndex = Math.floor(index / numColumns);
+  const colIndex = indexToColumn(index);
+  const rowIndex = indexToRow(index);
 
   const indexX = boardX + squareWidth * colIndex;
   const indexY = boardY + squareWidth * rowIndex;
@@ -25,26 +33,241 @@ function getAnimationNameFromPath(path: number[]): string {
   return `move${path.join("-")}`;
 }
 
+// The fish icon points "right" unless rotated
+function convertDirectionToRotation(direction: Direction): number {
+  switch (direction) {
+    case "up":
+      return 270;
+    case "down":
+      return 90;
+    case "right":
+      return 0;
+    case "left":
+      return 180;
+
+    default: {
+      // Fails if any direction is not covered by the cases above
+      const exhaustiveCheck: never = direction;
+
+      throw new Error(`no opposing stream for ${String(exhaustiveCheck)}`);
+    }
+  }
+}
+
+function getDirectionBetweenIndexes(
+  fromIndex: number,
+  toIndex: number,
+): Direction | null {
+  if (fromIndex === toIndex) {
+    return null;
+  }
+
+  const fromColumn = indexToColumn(fromIndex);
+  const toColumn = indexToColumn(toIndex);
+  const fromRow = indexToRow(fromIndex);
+  const toRow = indexToRow(toIndex);
+
+  // If both the column and row changed, or either change was > 1, then a whirlpool was involved
+  // (A whirlpool could still be involved otherwise, but would be an adjacent whirlpool and will just be treated as a normal adjacent move)
+  if (
+    (fromColumn != toColumn && fromRow != toRow) ||
+    Math.abs(fromColumn - toColumn) > 1 ||
+    Math.abs(fromRow - toRow) > 1
+  ) {
+    return null;
+  }
+
+  if (fromColumn < toColumn) {
+    return "right";
+  }
+
+  if (fromColumn > toColumn) {
+    return "left";
+  }
+
+  if (fromRow < toRow) {
+    return "down";
+  }
+
+  if (fromRow > toRow) {
+    return "up";
+  }
+
+  // this should never be reached
+  return null;
+}
+
+function getRotationForIndex(
+  index: number,
+  puzzle: (Feature | null)[],
+  previousIndex?: number,
+): number | null {
+  if (puzzle[index] === "streamDown") {
+    return convertDirectionToRotation("down");
+  } else if (puzzle[index] === "streamUp") {
+    return convertDirectionToRotation("up");
+  } else if (puzzle[index] === "streamLeft") {
+    return convertDirectionToRotation("left");
+  } else if (puzzle[index] === "streamRight") {
+    return convertDirectionToRotation("right");
+  } else if (puzzle[index] === "whirlpool") {
+    return 720;
+  } else if (previousIndex != undefined) {
+    const direction = getDirectionBetweenIndexes(previousIndex, index);
+    if (direction === null) {
+      return null;
+    }
+    return convertDirectionToRotation(direction);
+  } else {
+    return null;
+  }
+}
+
+function getFinalDirectionForPath(
+  path: number[],
+  puzzle: (Feature | null)[],
+): Direction | null {
+  const finalIndex = path[path.length - 1];
+
+  // If the final index is a stream, return the direction of the stream
+  if (puzzle[finalIndex] === "streamDown") {
+    return "down";
+  } else if (puzzle[finalIndex] === "streamUp") {
+    return "up";
+  } else if (puzzle[finalIndex] === "streamLeft") {
+    return "left";
+  } else if (puzzle[finalIndex] === "streamRight") {
+    return "right";
+  }
+
+  // Otherwise, return the direction based on the diff between the last 2 adjacent (i.e. not whirlpool), different (i.e. not staying in place) indexes
+  // Start from the last index and work backwards to the second index
+  for (let metaIndex = path.length - 1; metaIndex > 0; metaIndex--) {
+    const fishIndex = path[metaIndex];
+    const previousFishIndex = path[metaIndex - 1];
+
+    const movementDirection = getDirectionBetweenIndexes(
+      previousFishIndex,
+      fishIndex,
+    );
+
+    if (movementDirection != null) {
+      return movementDirection;
+    }
+  }
+
+  return null;
+}
+
+// To keep from rotating the "long way" around
+function getShortestRotationDelta(rotation: number): number {
+  return ((((rotation + 180) % 360) + 360) % 360) - 180;
+}
+
+function getRelativeRotationsForPath(
+  path: number[],
+  puzzle: (Feature | null)[],
+  swipeDirection: Direction,
+): number[] {
+  const finalDirection =
+    getFinalDirectionForPath(path, puzzle) ?? swipeDirection;
+
+  const finalRotation = getShortestRotationDelta(
+    convertDirectionToRotation(finalDirection),
+  );
+
+  // Rotation for the first index is the swipe direction, relative to the final direction
+  const rotations = [
+    getShortestRotationDelta(
+      convertDirectionToRotation(swipeDirection) - finalRotation,
+    ),
+  ];
+
+  for (let metaIndex = 1; metaIndex < path.length - 1; metaIndex++) {
+    const indexInPuzzle = path[metaIndex];
+
+    const previousRotation = rotations[metaIndex - 1];
+
+    const rawRotation =
+      getRotationForIndex(indexInPuzzle, puzzle, path[metaIndex - 1]) ??
+      previousRotation + finalRotation;
+
+    const rawRelativeRotation = rawRotation - finalRotation;
+
+    // Let the whirlpool spin
+    if (puzzle[indexInPuzzle] === "whirlpool") {
+      rotations.push(rawRelativeRotation);
+    } else {
+      const delta = getShortestRotationDelta(
+        rawRelativeRotation - previousRotation,
+      );
+      rotations.push(previousRotation + delta);
+    }
+  }
+
+  // Last rotation is always an equivalent of 0
+  const previousRotation = rotations[rotations.length - 1];
+  const delta = getShortestRotationDelta(0 - previousRotation);
+  rotations.push(previousRotation + delta);
+
+  return rotations;
+}
+
+function getRelativePositionsForPath(
+  path: number[],
+  boardX: number,
+  boardY: number,
+  squareWidth: number,
+): {x: number; y: number}[] {
+  const finalIndex = path[path.length - 1];
+
+  const finalPosition = getXYForIndex(finalIndex, boardX, boardY, squareWidth);
+
+  return path.map((index) => {
+    const position = getXYForIndex(index, boardX, boardY, squareWidth);
+    return {x: position.x - finalPosition.x, y: position.y - finalPosition.y};
+  });
+}
+
 function getKeyframesForPath(
   path: number[],
   boardX: number,
   boardY: number,
   squareWidth: number,
+  puzzle: (Feature | null)[],
+  swipeDirection: Direction,
 ): string {
-  const finalIndex = path[path.length - 1];
+  const positionSteps = getRelativePositionsForPath(
+    path,
+    boardX,
+    boardY,
+    squareWidth,
+  );
 
-  const finalPosition = getXYForIndex(finalIndex, boardX, boardY, squareWidth);
+  const rotationSteps = getRelativeRotationsForPath(
+    path,
+    puzzle,
+    swipeDirection,
+  );
 
-  const positionSteps = path.map((index) => {
-    const position = getXYForIndex(index, boardX, boardY, squareWidth);
-    return {x: position.x - finalPosition.x, y: position.y - finalPosition.y};
-  });
+  const stepSize = 1 / (positionSteps.length - 1);
+
+  const translationStrings = positionSteps.map(
+    ({x, y}) => `translate(${x}px, ${y}px)`,
+  );
+
+  const rotationStrings = rotationSteps.map(
+    (rotation) => `rotate(${rotation}deg)`,
+  );
 
   const frames = positionSteps
-    .map(
-      ({x, y}, index) =>
-        `${(index / (positionSteps.length - 1)) * 100}% { transform: translate(${x}px, ${y}px); }`,
-    )
+    .map((_, index) => {
+      if (index === 0 || index === positionSteps.length - 1) {
+        return `${stepSize * index * 100}% { transform: ${translationStrings[index]} ${rotationStrings[index]}; }`;
+      }
+
+      return `${stepSize * index * 100}% { transform: ${translationStrings[index]} ${rotationStrings[index - 1]}; }\n${stepSize * (index + 0.5) * 100}% { transform: ${translationStrings[index]} ${rotationStrings[index]}; }`;
+    })
     .join("\n");
 
   return `\n@keyframes ${getAnimationNameFromPath(path)} {\n${frames}\n}`;
@@ -62,14 +285,14 @@ function FeatureSquare({
 
 function FishSquare({
   containsFish,
-  swipeDirection,
+  direction,
   ref,
 }: {
   containsFish: boolean;
-  swipeDirection: Direction;
+  direction: Direction | undefined;
   ref: React.Ref<HTMLDivElement>;
 }): React.JSX.Element {
-  const className = `square ${swipeDirection} ${containsFish ? "fish" : ""}`;
+  const className = `square ${direction ?? ""} ${containsFish ? "fish" : ""}`;
 
   return <div className={className} ref={ref}></div>;
 }
@@ -105,7 +328,8 @@ export default function Board({
   );
 
   const swipeOrigin = React.useRef({x: 0, y: 0});
-  const isSwiping = React.useRef(false);
+
+  const [isSwiping, setIsSwiping] = React.useState(false);
 
   const [swipeDirection, setSwipeDirection] =
     React.useState<Direction>("right");
@@ -113,6 +337,14 @@ export default function Board({
   const [animationPaths, setAnimationPaths] = React.useState<number[][] | null>(
     null,
   );
+
+  const finalDirectionByIndex: Map<number, Direction> = new Map();
+  animationPaths?.forEach((path) => {
+    const finalIndex = path[path.length - 1];
+    const finalDirection =
+      getFinalDirectionForPath(path, puzzle) ?? swipeDirection;
+    finalDirectionByIndex.set(finalIndex, finalDirection);
+  });
 
   React.useLayoutEffect(() => {
     if (!boardRef.current || !styleRef.current || !animationPaths?.length) {
@@ -126,7 +358,16 @@ export default function Board({
     const squareWidth = boardWidth / numColumns;
 
     const animations = animationPaths
-      ?.map((path) => getKeyframesForPath(path, boardX, boardY, squareWidth))
+      ?.map((path) =>
+        getKeyframesForPath(
+          path,
+          boardX,
+          boardY,
+          squareWidth,
+          puzzle,
+          swipeDirection,
+        ),
+      )
       .join("\n");
 
     styleRef.current.textContent = animations;
@@ -152,12 +393,12 @@ export default function Board({
 
       finalSquareElement.addEventListener("animationend", onEnd);
     });
-  }, [animationPaths]);
+  }, [animationPaths, puzzle, swipeDirection]);
 
   const fishSquares = puzzle.map((_, index) => (
     <FishSquare
       containsFish={fishIndexes.includes(index)}
-      swipeDirection={swipeDirection}
+      direction={isSwiping ? swipeDirection : finalDirectionByIndex.get(index)}
       key={index}
       ref={squareRefCallbacks[index]}
     ></FishSquare>
@@ -187,7 +428,7 @@ export default function Board({
           return;
         }
 
-        isSwiping.current = true;
+        setIsSwiping(true);
 
         let nextDirection: Direction;
         if (Math.abs(dx) > Math.abs(dy)) {
@@ -201,7 +442,7 @@ export default function Board({
       onPointerUp={(event) => {
         event.currentTarget.releasePointerCapture(event.pointerId);
 
-        if (isSwiping.current && remainingSwipes > 0) {
+        if (isSwiping && swipeDirection && remainingSwipes > 0) {
           const animationSteps = getFishIndexUpdates(
             fishIndexes,
             puzzle,
@@ -225,7 +466,7 @@ export default function Board({
           dispatchGameState({action: "move", newIndexes});
         }
 
-        isSwiping.current = false;
+        setIsSwiping(false);
       }}
     >
       {/* for the generated animation keyframes */}

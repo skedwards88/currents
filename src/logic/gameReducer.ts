@@ -184,23 +184,9 @@ function getFishIndexesAfterElementStep(
         continue;
       }
 
-      // Check if we can push the fish in the direction of the stream (including any cascading pushes)
-      const fishPushIsValid = fishPushValidQ(
-        startingFishIndex,
-        streamDirection,
-        finalFishIndexes,
-        puzzle,
-      );
-
-      // If the fish can't be pushed in the direction of the stream, skip to the next fish
-      // todo don't need this since push function checks it
-      if (!fishPushIsValid) {
-        continue;
-      }
-
       const fishIndexesAfterPush = pushFish(
-        startingFishIndex,
         streamDirection,
+        metaIndex,
         finalFishIndexes,
         puzzle,
       );
@@ -228,11 +214,13 @@ function getFishIndexesAfterElementStep(
 }
 
 function fishPushValidQ(
-  pushedFishIndex: number,
   direction: Direction,
+  pushedFishMetaIndex: number, // index of the fish within fishIndexes, not within board
   fishIndexes: GameState["fishHistory"][0],
   puzzle: GameState["puzzle"],
 ): boolean {
+  const pushedFishIndex = fishIndexes[pushedFishMetaIndex];
+
   const targetIndex = getNextIndex(pushedFishIndex, direction);
 
   // If target index is same as starting index, then fish is pushed into the edge and can't move
@@ -266,15 +254,16 @@ function fishPushValidQ(
     }
 
     // Otherwise, get the valid push result for that fish instead
-    return fishPushValidQ(targetIndex, direction, fishIndexes, puzzle);
+    const targetMetaIndex = fishIndexes.findIndex((i) => i === targetIndex);
+    return fishPushValidQ(direction, targetMetaIndex, fishIndexes, puzzle);
   }
 
   return true;
 }
 
 function pushFish(
-  pushedFishIndex: number,
   direction: Direction,
+  pushedFishMetaIndex: number, // index of the fish within fishIndexes, not within board
   fishIndexes: GameState["fishHistory"][0],
   puzzle: GameState["puzzle"],
 ): GameState["fishHistory"][0] {
@@ -283,8 +272,8 @@ function pushFish(
 
   // todo add something so this only gets called once instead of on every recursion
   const fishPushIsValid = fishPushValidQ(
-    pushedFishIndex,
     direction,
+    pushedFishMetaIndex,
     fishIndexes,
     puzzle,
   );
@@ -294,25 +283,24 @@ function pushFish(
     return fishIndexes;
   }
 
-  let newFishIndexes = [...fishIndexes];
+  const pushedFishIndex = fishIndexes[pushedFishMetaIndex];
 
   const targetIndex = getNextIndex(pushedFishIndex, direction);
 
-  const pushedFishMetaIndex = fishIndexes.findIndex(
-    (i) => i === pushedFishIndex,
-  );
+  const targetMetaIndex = fishIndexes.findIndex((i) => i === targetIndex);
 
-  if (pushedFishMetaIndex === -1) {
-    throw new Error(
-      `Pushed index ${pushedFishIndex} not in fish indexes ${String(fishIndexes)}`,
-    );
-  }
+  let newFishIndexes = [...fishIndexes];
 
   newFishIndexes[pushedFishMetaIndex] = targetIndex;
 
   // if there was a fish at the target index, that fish gets pushed too
-  if (fishIndexes.includes(targetIndex)) {
-    newFishIndexes = pushFish(targetIndex, direction, newFishIndexes, puzzle);
+  if (targetMetaIndex !== -1) {
+    newFishIndexes = pushFish(
+      direction,
+      targetMetaIndex,
+      newFishIndexes,
+      puzzle,
+    );
   }
 
   return newFishIndexes;

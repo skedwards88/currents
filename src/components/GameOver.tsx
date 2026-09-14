@@ -1,6 +1,6 @@
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import Share from "@skedwards88/shared-components/src/components/Share";
-import logo from "../images/favicon/favicon_color.svg";
+import logo from "../images/favicon/favicon_color_transparent.svg";
 import {type ReducerPayload} from "../logic/gameReducer";
 
 export default function GameOver({

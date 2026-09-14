@@ -124,9 +124,9 @@ button:disabled {
 }
 
 .errorText {
-  color: red;
+  color: rgb(237 81 112);
 }
 
 .warningText {
-  color: pink;
+  color: rgb(237 138 157);
 }

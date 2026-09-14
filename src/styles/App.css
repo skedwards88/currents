@@ -1,8 +1,8 @@
 html {
   --square-size: min(19vw, 10vh);
   --default-font-size: clamp(20px, 3.5vh, 27px);
-  --dark-color: rgb(53 43 194);
-  --light-color: rgb(149 216 223);
+  --dark-color: rgb(14 9 171);
+  --light-color: rgb(2 180 240);
 
   background-color: var(--dark-color);
   color: white;
@@ -26,7 +26,7 @@ button {
   text-align: center;
   appearance: none;
   font-size: calc(var(--default-font-size) * 1);
-  background-color: gray;
+  background-color: rgb(96 136 148);
   border: 1px solid white;
   border-radius: 5px;
   color: white;
@@ -50,5 +50,5 @@ button {
 }
 
 .info a {
-  color: rgb(0 162 255);
+  color: rgb(5 173 143);
 }

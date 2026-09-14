@@ -97,11 +97,15 @@ function getDirectionBetweenIndexes(
   return null;
 }
 
-function getRotationForIndex(
-  index: number,
-  puzzle: (Feature | null)[],
-  previousIndex?: number,
-): number | null {
+function getRotationForIndex({
+  index,
+  puzzle,
+  previousIndex,
+}: {
+  index: number;
+  puzzle: (Feature | null)[];
+  previousIndex?: number;
+}): number | null {
   if (puzzle[index] === "streamDown") {
     return convertDirectionToRotation("down");
   } else if (puzzle[index] === "streamUp") {
@@ -164,11 +168,15 @@ function getShortestRotationDelta(rotation: number): number {
   return ((((rotation + 180) % 360) + 360) % 360) - 180;
 }
 
-function getRelativeRotationsForPath(
-  path: number[],
-  puzzle: (Feature | null)[],
-  swipeDirection: Direction,
-): number[] {
+function getRelativeRotationsForPath({
+  path,
+  puzzle,
+  swipeDirection,
+}: {
+  path: number[];
+  puzzle: (Feature | null)[];
+  swipeDirection: Direction;
+}): number[] {
   const finalDirection =
     getFinalDirectionForPath(path, puzzle) ?? swipeDirection;
 
@@ -189,8 +197,11 @@ function getRelativeRotationsForPath(
     const previousRotation = rotations[metaIndex - 1];
 
     const rawRotation =
-      getRotationForIndex(indexInPuzzle, puzzle, path[metaIndex - 1]) ??
-      previousRotation + finalRotation;
+      getRotationForIndex({
+        index: indexInPuzzle,
+        puzzle,
+        previousIndex: path[metaIndex - 1],
+      }) ?? previousRotation + finalRotation;
 
     const rawRelativeRotation = rawRotation - finalRotation;
 
@@ -244,11 +255,11 @@ function getKeyframesForPath(
     squareWidth,
   );
 
-  const rotationSteps = getRelativeRotationsForPath(
+  const rotationSteps = getRelativeRotationsForPath({
     path,
     puzzle,
     swipeDirection,
-  );
+  });
 
   const stepSize = 1 / (positionSteps.length - 1);
 
@@ -440,11 +451,11 @@ export default function Board({
         event.currentTarget.releasePointerCapture(event.pointerId);
 
         if (isSwiping && swipeDirection && remainingSwipes > 0) {
-          const animationSteps = getFishIndexUpdates(
-            fishIndexes,
+          const animationSteps = getFishIndexUpdates({
+            startingFishIndexes: fishIndexes,
             puzzle,
-            swipeDirection,
-          );
+            direction: swipeDirection,
+          });
 
           const newIndexes = animationSteps[animationSteps.length - 1];
 

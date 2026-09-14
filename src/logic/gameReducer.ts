@@ -25,11 +25,15 @@ function getOpposingStream(
   }
 }
 
-function getFishIndexesAfterSwipe(
-  startingFishIndexes: GameState["fishHistory"][0],
-  puzzle: GameState["puzzle"],
-  direction: Direction,
-): GameState["fishHistory"][0] {
+function getFishIndexesAfterSwipe({
+  startingFishIndexes,
+  puzzle,
+  direction,
+}: {
+  startingFishIndexes: GameState["fishHistory"][0];
+  puzzle: GameState["puzzle"];
+  direction: Direction;
+}): GameState["fishHistory"][0] {
   // figure out the index where the fish should move if unblocked
   const targetFishIndexes = startingFishIndexes.map((startingIndex) =>
     getNextIndex(startingIndex, direction),
@@ -93,11 +97,15 @@ function getFishIndexesAfterSwipe(
   return fishIndexesAfterMovement;
 }
 
-function getFishIndexesAfterElementStep(
-  startingFishIndexes: GameState["fishHistory"][0],
-  puzzle: GameState["puzzle"],
-  whirlpoolHasBeenUsed: boolean,
-): [GameState["fishHistory"][0], boolean] {
+function getFishIndexesAfterElementStep({
+  startingFishIndexes,
+  puzzle,
+  whirlpoolHasBeenUsed,
+}: {
+  startingFishIndexes: GameState["fishHistory"][0];
+  puzzle: GameState["puzzle"];
+  whirlpoolHasBeenUsed: boolean;
+}): [GameState["fishHistory"][0], boolean] {
   // Gets a single animation step for element interaction
   // Rules:
   // - Process the fish in order 0..34
@@ -183,12 +191,12 @@ function getFishIndexesAfterElementStep(
         continue;
       }
 
-      const fishIndexesAfterPush = pushFish(
-        streamDirection,
-        metaIndex,
-        finalFishIndexes,
+      const fishIndexesAfterPush = pushFish({
+        direction: streamDirection,
+        pushedFishMetaIndex: metaIndex,
+        fishIndexes: finalFishIndexes,
         puzzle,
-      );
+      });
 
       // If the pushed fish indexes move any fish that already moved, reject the push
       for (let index = 0; index < fishIndexesAfterPush.length; index++) {
@@ -212,12 +220,17 @@ function getFishIndexesAfterElementStep(
   return [finalFishIndexes, whirlpoolHasBeenUsed];
 }
 
-function fishPushValidQ(
-  direction: Direction,
-  pushedFishMetaIndex: number, // index of the fish within fishIndexes, not within board
-  fishIndexes: GameState["fishHistory"][0],
-  puzzle: GameState["puzzle"],
-): boolean {
+function fishPushValidQ({
+  direction,
+  pushedFishMetaIndex,
+  fishIndexes,
+  puzzle,
+}: {
+  direction: Direction;
+  pushedFishMetaIndex: number; // index of the fish within fishIndexes, not within board
+  fishIndexes: GameState["fishHistory"][0];
+  puzzle: GameState["puzzle"];
+}): boolean {
   const pushedFishIndex = fishIndexes[pushedFishMetaIndex];
 
   const targetIndex = getNextIndex(pushedFishIndex, direction);
@@ -254,25 +267,36 @@ function fishPushValidQ(
 
     // Otherwise, get the valid push result for that fish instead
     const targetMetaIndex = fishIndexes.findIndex((i) => i === targetIndex);
-    return fishPushValidQ(direction, targetMetaIndex, fishIndexes, puzzle);
+    return fishPushValidQ({
+      direction,
+      pushedFishMetaIndex: targetMetaIndex,
+      fishIndexes,
+      puzzle,
+    });
   }
 
   return true;
 }
 
-function pushFish(
-  direction: Direction,
-  pushedFishMetaIndex: number, // index of the fish within fishIndexes, not within board
-  fishIndexes: GameState["fishHistory"][0],
-  puzzle: GameState["puzzle"],
-  validateChain: boolean = true,
-): GameState["fishHistory"][0] {
+function pushFish({
+  direction,
+  pushedFishMetaIndex,
+  fishIndexes,
+  puzzle,
+  validateChain = true,
+}: {
+  direction: Direction;
+  pushedFishMetaIndex: number; // index of the fish within fishIndexes, not within board
+  fishIndexes: GameState["fishHistory"][0];
+  puzzle: GameState["puzzle"];
+  validateChain?: boolean;
+}): GameState["fishHistory"][0] {
   // Push a fish in a direction. If a fish is in the new location, push that fish as well
   // Doesn't push the fish if any fish in the chain of pushing can't be pushed
 
   // The validateChain param allows the validation check to be short circuited (for later recursions)
   const fishPushIsValid = validateChain
-    ? fishPushValidQ(direction, pushedFishMetaIndex, fishIndexes, puzzle)
+    ? fishPushValidQ({direction, pushedFishMetaIndex, fishIndexes, puzzle})
     : true;
 
   // If the fish can't be pushed in the direction of the stream, return the fish indexes unchanged
@@ -292,31 +316,35 @@ function pushFish(
 
   // if there was a fish at the target index, that fish gets pushed too
   if (targetMetaIndex !== -1) {
-    newFishIndexes = pushFish(
+    newFishIndexes = pushFish({
       direction,
-      targetMetaIndex,
-      newFishIndexes,
+      pushedFishMetaIndex: targetMetaIndex,
+      fishIndexes: newFishIndexes,
       puzzle,
-      false,
-    );
+      validateChain: false,
+    });
   }
 
   return newFishIndexes;
 }
 
-export function getFishIndexUpdates(
-  startingFishIndexes: GameState["fishHistory"][0],
-  puzzle: GameState["puzzle"],
-  direction: Direction,
-): number[][] {
+export function getFishIndexUpdates({
+  startingFishIndexes,
+  puzzle,
+  direction,
+}: {
+  startingFishIndexes: GameState["fishHistory"][0];
+  puzzle: GameState["puzzle"];
+  direction: Direction;
+}): number[][] {
   const fishIndexSteps: number[][] = [[...startingFishIndexes]];
 
   // Move the fish based on the swipe
-  const fishIndexesAfterSwipe = getFishIndexesAfterSwipe(
+  const fishIndexesAfterSwipe = getFishIndexesAfterSwipe({
     startingFishIndexes,
     puzzle,
     direction,
-  );
+  });
 
   fishIndexSteps.push(fishIndexesAfterSwipe);
 
@@ -332,11 +360,11 @@ export function getFishIndexUpdates(
     ];
 
     [fishIndexesAfterMovementStep, whirlpoolHasBeenUsed] =
-      getFishIndexesAfterElementStep(
-        fishIndexesAfterMovementStep,
+      getFishIndexesAfterElementStep({
+        startingFishIndexes: fishIndexesAfterMovementStep,
         puzzle,
         whirlpoolHasBeenUsed,
-      );
+      });
 
     if (
       arraysMatchQ(

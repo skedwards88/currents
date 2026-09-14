@@ -390,7 +390,7 @@ export default function Board({
 
       finalSquareElement.addEventListener("animationend", onEnd);
     });
-  }, [animationPaths, puzzle, swipeDirection]);
+  }, [animationPaths]);
 
   const fishSquares = puzzle.map((_, index) => (
     <FishSquare

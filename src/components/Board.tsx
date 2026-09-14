@@ -261,13 +261,10 @@ function getKeyframesForPath(
   );
 
   const frames = positionSteps
-    .map((_, index) => {
-      if (index === 0 || index === positionSteps.length - 1) {
-        return `${stepSize * index * 100}% { transform: ${translationStrings[index]} ${rotationStrings[index]}; }`;
-      }
-
-      return `${stepSize * index * 100}% { transform: ${translationStrings[index]} ${rotationStrings[index - 1]}; }\n${stepSize * (index + 0.5) * 100}% { transform: ${translationStrings[index]} ${rotationStrings[index]}; }`;
-    })
+    .map(
+      (_, index) =>
+        `${stepSize * index * 100}% { transform: ${translationStrings[index]} ${rotationStrings[index]}; }`,
+    )
     .join("\n");
 
   return `\n@keyframes ${getAnimationNameFromPath(path)} {\n${frames}\n}`;

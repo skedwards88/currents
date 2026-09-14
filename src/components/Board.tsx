@@ -236,12 +236,17 @@ function getRelativePositionsForPath(
   });
 }
 
-function getKeyframesForPath(
-  path: number[],
-  squareWidth: number,
-  puzzle: (Feature | null)[],
-  swipeDirection: Direction,
-): string {
+function getKeyframesForPath({
+  path,
+  squareWidth,
+  puzzle,
+  swipeDirection,
+}: {
+  path: number[];
+  squareWidth: number;
+  puzzle: (Feature | null)[];
+  swipeDirection: Direction;
+}): string {
   const positionSteps = getRelativePositionsForPath(path, squareWidth);
 
   const rotationSteps = getRelativeRotationsForPath({
@@ -354,7 +359,7 @@ export default function Board({
 
     const animations = animationPaths
       ?.map((path) =>
-        getKeyframesForPath(path, squareWidth, puzzle, swipeDirection),
+        getKeyframesForPath({path, squareWidth, puzzle, swipeDirection}),
       )
       .join("\n");
 

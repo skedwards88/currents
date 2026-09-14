@@ -51,7 +51,6 @@ function getFishIndexesAfterSwipe(
       if (canMoveFish[metaIndex] === null) {
         const targetIndex = targetFishIndexes[metaIndex];
         // A fish can't move if it is blocked by a rock, opposing stream, or the edge (which is indicated by the target index being the same as the starting index)
-        // todo might be able to use fishPushValidQ? but I think not
         if (
           puzzle[targetIndex] === "rock" ||
           puzzle[targetIndex] === opposingStream ||
@@ -266,17 +265,15 @@ function pushFish(
   pushedFishMetaIndex: number, // index of the fish within fishIndexes, not within board
   fishIndexes: GameState["fishHistory"][0],
   puzzle: GameState["puzzle"],
+  validateChain: boolean = true,
 ): GameState["fishHistory"][0] {
   // Push a fish in a direction. If a fish is in the new location, push that fish as well
   // Doesn't push the fish if any fish in the chain of pushing can't be pushed
 
-  // todo add something so this only gets called once instead of on every recursion
-  const fishPushIsValid = fishPushValidQ(
-    direction,
-    pushedFishMetaIndex,
-    fishIndexes,
-    puzzle,
-  );
+  // The validateChain param allows the validation check to be short circuited (for later recursions)
+  const fishPushIsValid = validateChain
+    ? fishPushValidQ(direction, pushedFishMetaIndex, fishIndexes, puzzle)
+    : true;
 
   // If the fish can't be pushed in the direction of the stream, return the fish indexes unchanged
   if (!fishPushIsValid) {
@@ -300,6 +297,7 @@ function pushFish(
       targetMetaIndex,
       newFishIndexes,
       puzzle,
+      false,
     );
   }
 

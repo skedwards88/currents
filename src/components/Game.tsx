@@ -48,6 +48,8 @@ export default function Game({
 
   const gameComplete = levelComplete && level === puzzles.length;
 
+  const [resetKey, setResetKey] = React.useState(1);
+
   return gameComplete ? (
     <GameOver dispatchGameState={dispatchGameState}></GameOver>
   ) : (
@@ -61,6 +63,7 @@ export default function Game({
           disabled={fishHistory.length === 1}
           onClick={() => {
             dispatchGameState({action: "reset"});
+            setResetKey((previous) => previous + 1);
           }}
         ></button>
         <button
@@ -88,6 +91,8 @@ export default function Game({
         puzzle={puzzle}
         dispatchGameState={dispatchGameState}
         remainingSwipes={remainingSwipes}
+        // Force the child to remount on refresh
+        key={resetKey}
       ></Board>
     </div>
   );

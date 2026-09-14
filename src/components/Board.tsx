@@ -16,15 +16,13 @@ function indexToRow(index: number): number {
 
 function getXYForIndex(
   index: number,
-  boardX: number,
-  boardY: number,
   squareWidth: number,
 ): {x: number; y: number} {
   const colIndex = indexToColumn(index);
   const rowIndex = indexToRow(index);
 
-  const indexX = boardX + squareWidth * colIndex;
-  const indexY = boardY + squareWidth * rowIndex;
+  const indexX = squareWidth * colIndex;
+  const indexY = squareWidth * rowIndex;
 
   return {x: indexX, y: indexY};
 }
@@ -226,34 +224,25 @@ function getRelativeRotationsForPath({
 
 function getRelativePositionsForPath(
   path: number[],
-  boardX: number,
-  boardY: number,
   squareWidth: number,
 ): {x: number; y: number}[] {
   const finalIndex = path[path.length - 1];
 
-  const finalPosition = getXYForIndex(finalIndex, boardX, boardY, squareWidth);
+  const finalPosition = getXYForIndex(finalIndex, squareWidth);
 
   return path.map((index) => {
-    const position = getXYForIndex(index, boardX, boardY, squareWidth);
+    const position = getXYForIndex(index, squareWidth);
     return {x: position.x - finalPosition.x, y: position.y - finalPosition.y};
   });
 }
 
 function getKeyframesForPath(
   path: number[],
-  boardX: number,
-  boardY: number,
   squareWidth: number,
   puzzle: (Feature | null)[],
   swipeDirection: Direction,
 ): string {
-  const positionSteps = getRelativePositionsForPath(
-    path,
-    boardX,
-    boardY,
-    squareWidth,
-  );
+  const positionSteps = getRelativePositionsForPath(path, squareWidth);
 
   const rotationSteps = getRelativeRotationsForPath({
     path,
@@ -360,21 +349,12 @@ export default function Board({
     }
 
     const boardRect = boardRef.current.getBoundingClientRect();
-    const boardX = boardRect.x;
-    const boardY = boardRect.y;
     const boardWidth = boardRect.width;
     const squareWidth = boardWidth / numColumns;
 
     const animations = animationPaths
       ?.map((path) =>
-        getKeyframesForPath(
-          path,
-          boardX,
-          boardY,
-          squareWidth,
-          puzzle,
-          swipeDirection,
-        ),
+        getKeyframesForPath(path, squareWidth, puzzle, swipeDirection),
       )
       .join("\n");
 

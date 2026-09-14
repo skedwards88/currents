@@ -378,7 +378,7 @@ export default function Board({
 
       const animationName = getAnimationNameFromPath(path);
 
-      finalSquareElement.style.animation = `${animationName} ${path.length * 1000}ms linear forwards`;
+      finalSquareElement.style.animation = `${animationName} ${path.length * 400}ms linear forwards`;
 
       finalSquareElement.style.willChange = "transform";
 

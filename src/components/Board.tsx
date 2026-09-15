@@ -272,7 +272,7 @@ function getKeyframesForPath({
         ) {
           return `
             ${(stepSize * indexInPath - stepSize * 0.25) * 100}% { transform: ${translationStrings[indexInPath]} ${rotationStrings[indexInPath - 1] ?? "rotate(0deg)"} scale(1);}
-            ${(stepSize * indexInPath + stepSize * 0.25) * 100}% { transform: ${translationStrings[indexInPath]} rotate(360deg) scale(0);}`;
+            ${(stepSize * indexInPath + stepSize * 0.25) * 100}% { transform: ${translationStrings[indexInPath]} rotate(180deg) scale(0);}`;
         }
         // Exiting whirlpool: Move while shrunk, then unshrink and rotate
         if (
@@ -280,8 +280,8 @@ function getKeyframesForPath({
           indexInPuzzle != prevIndexInPuzzle
         ) {
           return `
-            ${(stepSize * indexInPath - stepSize * 0.25) * 100}% { transform: ${translationStrings[indexInPath]} rotate(360deg) scale(0);}
-            ${stepSize * indexInPath * 100}% { transform: ${translationStrings[indexInPath]} rotate(-360deg) scale(1); }`;
+            ${(stepSize * indexInPath - stepSize * 0.25) * 100}% { transform: ${translationStrings[indexInPath]} rotate(180deg) scale(0);}
+            ${stepSize * indexInPath * 100}% { transform: ${translationStrings[indexInPath]} rotate(-180deg) scale(1); }`;
         }
       }
       return `${stepSize * indexInPath * 100}% { transform: ${translationStrings[indexInPath]} ${rotationStrings[indexInPath]}; }`;
@@ -390,7 +390,7 @@ export default function Board({
 
       const animationName = getAnimationNameFromPath(path);
 
-      finalSquareElement.style.animation = `${animationName} ${path.length * 800}ms linear forwards`;
+      finalSquareElement.style.animation = `${animationName} ${path.length * 500}ms linear forwards`;
 
       finalSquareElement.style.willChange = "transform";
 

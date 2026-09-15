@@ -113,7 +113,7 @@ function getRotationForIndex({
   } else if (puzzle[index] === "streamRight") {
     return convertDirectionToRotation("right");
   } else if (puzzle[index] === "whirlpool") {
-    return 720;
+    return 360;
   } else if (previousIndex != undefined) {
     const direction = getDirectionBetweenIndexes(previousIndex, index);
     if (direction === null) {
@@ -265,11 +265,32 @@ function getKeyframesForPath({
     (rotation) => `rotate(${rotation}deg)`,
   );
 
-  const frames = positionSteps
-    .map(
-      (_, index) =>
-        `${stepSize * index * 100}% { transform: ${translationStrings[index]} ${rotationStrings[index]}; }`,
-    )
+  const frames = path
+    .map((indexInPuzzle, indexInPath) => {
+      if (puzzle[indexInPuzzle] === "whirlpool") {
+        const nextIndexInPuzzle = path[indexInPath + 1];
+        const prevIndexInPuzzle = path[indexInPath - 1];
+        // Entering whirlpool: Move to pool, then rotate and shrink
+        if (
+          puzzle[nextIndexInPuzzle] === "whirlpool" &&
+          indexInPuzzle != nextIndexInPuzzle
+        ) {
+          return `
+            ${(stepSize * indexInPath - stepSize * 0.25) * 100}% { transform: ${translationStrings[indexInPath]} ${rotationStrings[indexInPath - 1] ?? "rotate(0deg)"} scale(1);}
+            ${(stepSize * indexInPath + stepSize * 0.25) * 100}% { transform: ${translationStrings[indexInPath]} rotate(360deg) scale(0);}`;
+        }
+        // Exiting whirlpool: Move while shrunk, then unshrink and rotate
+        if (
+          puzzle[prevIndexInPuzzle] === "whirlpool" &&
+          indexInPuzzle != prevIndexInPuzzle
+        ) {
+          return `
+            ${(stepSize * indexInPath - stepSize * 0.25) * 100}% { transform: ${translationStrings[indexInPath]} rotate(360deg) scale(0);}
+            ${stepSize * indexInPath * 100}% { transform: ${translationStrings[indexInPath]} rotate(-360deg) scale(1); }`;
+        }
+      }
+      return `${stepSize * indexInPath * 100}% { transform: ${translationStrings[indexInPath]} ${rotationStrings[indexInPath]}; }`;
+    })
     .join("\n");
 
   return `\n@keyframes ${getAnimationNameFromPath(path)} {\n${frames}\n}`;
@@ -374,7 +395,7 @@ export default function Board({
 
       const animationName = getAnimationNameFromPath(path);
 
-      finalSquareElement.style.animation = `${animationName} ${path.length * 400}ms linear forwards`;
+      finalSquareElement.style.animation = `${animationName} ${path.length * 800}ms linear forwards`;
 
       finalSquareElement.style.willChange = "transform";
 

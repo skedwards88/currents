@@ -203,15 +203,10 @@ function getRelativeRotationsForPath({
 
     const rawRelativeRotation = rawRotation - finalRotation;
 
-    // Let the whirlpool spin
-    if (puzzle[indexInPuzzle] === "whirlpool") {
-      rotations.push(rawRelativeRotation);
-    } else {
-      const delta = getShortestRotationDelta(
-        rawRelativeRotation - previousRotation,
-      );
-      rotations.push(previousRotation + delta);
-    }
+    const delta = getShortestRotationDelta(
+      rawRelativeRotation - previousRotation,
+    );
+    rotations.push(previousRotation + delta);
   }
 
   // Last rotation is always an equivalent of 0

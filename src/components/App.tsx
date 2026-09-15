@@ -31,7 +31,7 @@ export default function App(): React.JSX.Element {
       return (
         <MoreGames
           setDisplay={setDisplay}
-          games={["crossjig", "lexlet", "wordfall", "gribbles", "logicGrid"]}
+          games={["deepSpaceSlime","crossjig", "lexlet"]}
           repoName={"currents"}
           includeExtraInfo={true}
           includeWordAttribution={false}

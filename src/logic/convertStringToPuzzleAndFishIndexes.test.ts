@@ -133,4 +133,12 @@ describe("convertStringToPuzzleAndFishIndexes", () => {
       "Letter D not found in featureToLetterLookup",
     );
   });
+
+  test("errors if string exceeds board size", () => {
+    const puzzleString = "F64C";
+
+    expect(() => convertStringToPuzzleAndFishIndexes(puzzleString)).toThrow(
+      `Input array length (66) exceeds target length (${numColumns * numRows})`,
+    );
+  });
 });

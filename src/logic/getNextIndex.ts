@@ -1,10 +1,6 @@
 import {type Direction} from "../components/Board";
 import {numColumns, numRows} from "./gameInit";
-
-// Gets the row index of an index in a flat array assuming the array represents a grid of the specified number of columns
-function getRowIndex(index: number, numColumns: number): number {
-  return Math.floor(index / numColumns);
-}
+import {indexToRow} from "./indexToRow";
 
 export function getNextIndex(index: number, direction: Direction): number {
   if (index < 0 || index >= numColumns * numRows) {
@@ -15,9 +11,7 @@ export function getNextIndex(index: number, direction: Direction): number {
     case "left": {
       const nextIndex = Math.max(0, index - 1);
 
-      if (
-        getRowIndex(index, numColumns) != getRowIndex(nextIndex, numColumns)
-      ) {
+      if (indexToRow(index, numColumns) != indexToRow(nextIndex, numColumns)) {
         return index;
       } else {
         return nextIndex;
@@ -27,9 +21,7 @@ export function getNextIndex(index: number, direction: Direction): number {
     case "right": {
       const nextIndex = Math.min(index + 1, numColumns * numRows - 1);
 
-      if (
-        getRowIndex(index, numColumns) != getRowIndex(nextIndex, numColumns)
-      ) {
+      if (indexToRow(index, numColumns) != indexToRow(nextIndex, numColumns)) {
         return index;
       } else {
         return nextIndex;

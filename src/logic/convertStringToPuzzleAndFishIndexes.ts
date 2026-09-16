@@ -7,6 +7,11 @@ import {
 } from "./gameInit";
 
 function padArray<T>(inputArray: T[], targetLength: number, fillValue: T): T[] {
+  if (inputArray.length > targetLength) {
+    throw new Error(
+      `Input array length (${inputArray.length}) exceeds target length (${targetLength})`,
+    );
+  }
   return Array.from({length: targetLength}, (_, i) =>
     i < inputArray.length ? inputArray[i] : fillValue,
   );

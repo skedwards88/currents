@@ -7,7 +7,7 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
   {
     maxSwipes: 2,
     puzzleString: "12C3F1C3F",
-    //Section: Coral, Solution: RU/UR, Intent: Teaches fish move together
+    //Section: Coral, Solution: RU, Intent: Teaches fish move together
   },
   {
     maxSwipes: 3,
@@ -17,7 +17,7 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
   {
     maxSwipes: 2,
     puzzleString: "11CR3FRR3FC",
-    //Section: Rock, Solution: RU/UR, Intent: Teaches rock blocks
+    //Section: Rock, Solution: RU, Intent: Teaches rock blocks
   },
   {
     maxSwipes: 3,
@@ -32,155 +32,151 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
   {
     maxSwipes: 2,
     puzzleString: "7C3N4N4F1C3F",
-    //Section: Slipstream, Solutino: UR, Intent: Simple application slipstream
+    //Section: Slipstream, Solution: UR, Intent: Simple application slipstream
   },
   {
     maxSwipes: 2,
     puzzleString: "7C3E4N4F",
-    //Section: Slipstream, Solutino: UU, Intent: Teaches slipstream turns
+    //Section: Slipstream, Solution: UU, Intent: Teaches slipstream turns
   },
   {
     maxSwipes: 2,
     puzzleString: "6EC3NWC2FF",
-    //Section: Slipstream, Solutino: UD, Intent: Applies slipstream turns and fish pushing
+    //Section: Slipstream, Solution: UD, Intent: Applies slipstream turns and fish pushing
   },
   {
     maxSwipes: 2,
     puzzleString: "7C3FC3FN3F5C",
-    //Section: Slipstream, Solutino: RD, Intent: Teaches moving against slipstream is blocked
+    //Section: Slipstream, Solution: RD, Intent: Teaches moving against slipstream is blocked
   },
   {
     maxSwipes: 3,
     puzzleString: "6E4NC3F1W2C1F",
-    //Section: Slipstream, Solutino: ULD, Intent: Applies slipstream turns and slipstream blocking
+    //Section: Slipstream, Solution: ULD, Intent: Applies slipstream turns and slipstream blocking
   },
   {
     maxSwipes: 2,
     puzzleString: "7C3RC3F4FN",
-    //Section: Rock and Slipstream, Solutino: RU, Intent: Teaches slipstream pushes chain of fish
+    //Section: Rock and Slipstream, Solution: RU, Intent: Teaches slipstream pushes chain of fish
   },
   {
     maxSwipes: 2,
     puzzleString: "2C4C3FCR3N3FN4F",
-    //Section: Rock and Slipstream, Solutino: UR, Intent: Applies slipstream pushes chain of fish
+    //Section: Rock and Slipstream, Solution: UR, Intent: Applies slipstream pushes chain of fish
   },
   {
     maxSwipes: 3,
-    puzzleString: "2C5R3N3FNN1C2F",
-    //Section: Rock and Slipstream, Solutino: RRU, Intent: Applies slipstream + rock
+    puzzleString: "2C5R3N3FN4N1C2F",
+    //Section: Rock and Slipstream, Solution: RRU, Intent: Applies slipstream + rock
   },
   {
     maxSwipes: 3,
     puzzleString: "11E1R2FEC2F1C",
-    //Section: Rock and Slipstream, Solutino: URD, Intent: Harder puzzle
+    //Section: Rock and Slipstream, Solution: URD, Intent: Harder puzzle
   },
   {
     maxSwipes: 2,
     puzzleString: "7R3F1C3NC2FN",
-    //Section: Rock and Slipstream, Solutino: RR, Intent: Teaches rock trumps slipstream (bottom fish stays in slipstream)
+    //Section: Rock and Slipstream, Solution: RR, Intent: Teaches rock trumps slipstream (bottom fish stays in slipstream)
   },
   {
     maxSwipes: 3,
     puzzleString: "7R3CCR2FN3FN",
-    //Section: Rock and Slipstream, Solutino: RRL, Intent: Applies rock trumps slipstream (bottom fish stays in slipstream)
+    //Section: Rock and Slipstream, Solution: RRL, Intent: Applies rock trumps slipstream (bottom fish stays in slipstream)
   },
   {
     maxSwipes: 4,
     puzzleString: "6FRC3C4N3FN",
-    //Section: Rock and Slipstream, Solutino: RDRU, Intent: Harder Puzzle
+    //Section: Rock and Slipstream, Solution: RDRU, Intent: Harder Puzzle
   },
   {
-    maxSwipes: 6,
+    maxSwipes: 5,
     puzzleString: "1R5F4CCR1RN3FCN3NF",
-    //Section: Rock and Slipstream, Solutino: LUDDRR, Intent: Harder Puzzle
+    //Section: Rock and Slipstream, Solution: LUDRR, Intent: Harder Puzzle
   },
   {
     maxSwipes: 3,
     puzzleString: "9C3FC4N4F",
-    //Section: Edge, Solutino: RUD, Intent: Shows edge blocks
+    //Section: Edge, Solution: RUD, Intent: Shows edge blocks
   },
   {
     maxSwipes: 4,
-    puzzleString: "18C3CFF2FRC2FC",
-    //Section: Edge, Solutino: DDRU, Intent: Advanced edge blocking
-  },
-  {
-    maxSwipes: 5,
-    puzzleString: "3R4R1CCWFC1F2N4F",
-    //Section: Edge, Solutino: RULLD, Intent: Applies edge blocking, slipstream, rock
+    puzzleString: "19C2CFF2FRC2FC",
+    //Section: Edge, Solution: DDRU, Intent: Advanced edge blocking
   },
   {
     maxSwipes: 5,
     puzzleString: "2C4WWR1R5C1F1N1R3F",
-    //Section: Edge, Solutino: LUUUR, Intent: Harder Puzzle
+    //Section: Edge, Solution: LUUUR, Intent: Harder Puzzle
   },
   {
     maxSwipes: 2,
     puzzleString: "22FPR3R3RCP",
-    //Section: Whirlpool, Solutino: RL, Intent: Teaches whirlpool
+    //Section: Whirlpool, Solution: RL, Intent: Teaches whirlpool
   },
   {
     maxSwipes: 2,
     puzzleString: "12PF2C1C3FP",
-    //Section: Whirlpool, Solutino: LU, Intent: Whirlpool application
+    //Section: Whirlpool, Solution: LU, Intent: Whirlpool application
   },
   {
     maxSwipes: 3,
     puzzleString: "7FP2PEC2CFR",
-    //Section: Whirlpool, Solutino: RRL, Intent: Whirlpool + Rock + Slipstream Application
-  },
-  {
-    maxSwipes: 3,
-    puzzleString: "6PF4R3RPC3R4CF",
-    //Section: Whirlpool, Solutino: LLR, Intent: Teaches fish blocked on whirlpool does not jump
+    //Section: Whirlpool, Solution: RRL, Intent: Whirlpool + Rock + Slipstream Application
   },
   {
     maxSwipes: 4,
-    puzzleString: "6PF1F1CR4RP4C",
-    //Section: Whirlpool, Solutino: LLLD/DDLD, Intent: Applies whirlpool blocking and chain effect on blocking fish
-  },
-  {
-    maxSwipes: 4,
-    puzzleString: "6FPF3C2RFRP2C1C",
-    //Section: Whirlpool, Solutino: RLLD, Intent: Harder Puzzle
-  },
-  {
-    maxSwipes: 5,
     puzzleString: "8F3P4CR2CFP2R",
-    //Section: Whirlpool, Solutino: LDDUD, Intent: Harder Puzzle
+    //Section: Whirlpool, Solution: LDUD, Intent: Harder Puzzle
   },
   {
     maxSwipes: 5,
     puzzleString: "F5PC9C4P5F",
-    //Section: Whirlpool, Solutino: ULDRL, Intent: Applies whirlpool + edge
+    //Section: Whirlpool, Solution: ULDRL, Intent: Applies whirlpool + edge
   },
   {
     maxSwipes: 4,
     puzzleString: "9C3PC1FFRC3PN3F",
-    //Section: Whirlpool, Solutino: URRR, Intent: Harder puzzle, applies most concepts
+    //Section: Whirlpool, Solution: URRR, Intent: Harder puzzle, applies most concepts
   },
   {
     maxSwipes: 5,
     puzzleString: "17PCR1FR1C2PNC2FFR",
-    //Section: Whirlpool, Solutino: URRDR, Intent: Hardest puzzle, applies most concepts
+    //Section: Whirlpool, Solution: URRDR, Intent: Hardest puzzle, applies most concepts
   },
   {
-    maxSwipes: 2,
-    puzzleString: "R1WWWFNFFN",
-    //Section: Example, Solutino: R, Intent: Matches "Detailed Example" of docs
+    maxSwipes: 5,
+    puzzleString: "3CR3NC4R3FF",
+    //Section: Advanced, Solution: LUURR, Intent: Use edge to backup fish, allowing move out of slipstream
   },
   {
-    maxSwipes: 2,
-    puzzleString: "R1WWWFNFFN2F3FEP3FN8FPF",
-    //Section: Test, Solutino: R, Intent: Matches "Test" of docs
+    maxSwipes: 5,
+    puzzleString: "7E3FRC3E3CRF3W",
+    //Section: Advanced, Solution: LDRRU, Intent: Rocks forcing slipstream use
+  },
+  {
+    maxSwipes: 3,
+    puzzleString: "6FE3SPC2SEN2CPW2NWF",
+    //Section: Advanced, Solution: UDD, Intent: Slipstream mania!
+  },
+  {
+    maxSwipes: 4,
+    puzzleString: "6FE3SPC3EN2CPW2NWF",
+    //Section: Advanced, Solution: LRDD, Intent: Slipstream mania!
+  },
+  {
+    maxSwipes: 5,
+    puzzleString: "6FE3SPC3EN2CPW2N1F",
+    //Section: Advanced, Solution: LLRDD, Intent: Slipstream mania!
+  },
+  {
+    maxSwipes: 7,
+    puzzleString: "6C5F3RFC3F3C",
+    //Section: Advanced, Solution: LDUUDLR, Intent: 3 fish, all using 1 rock
+  },
+  {
+    maxSwipes: 8,
+    puzzleString: "7P3C1C3F4PF3R",
+    //Section: Advanced, Solution: RLLRDRLD, Intent: Complex use of rocks and whirlpools
   },
 ];
-
-// fish: "F",
-// coral: "C",
-// rock: "R",
-// whirlpool: "P",
-// streamUp: "N",
-// streamDown: "S",
-// streamLeft: "W",
-// streamRight: "E",

@@ -85,44 +85,56 @@ export default function Board({
     finalDirectionByIndex.set(finalIndex, finalDirection);
   });
 
-  React.useLayoutEffect(() => {
-    if (!boardRef.current || !styleRef.current || !animationPaths?.length) {
-      return;
-    }
-
-    const boardRect = boardRef.current.getBoundingClientRect();
-    const boardWidth = boardRect.width;
-    const squareWidth = boardWidth / numColumns;
-
-    const animations = animationPaths
-      ?.map((path) =>
-        getKeyframesForPath({path, squareWidth, puzzle, swipeDirection}),
-      )
-      .join("\n");
-
-    styleRef.current.textContent = animations;
-
-    animationPaths.forEach((path) => {
-      const finalSquareElement = squareRefs.current.get(path[path.length - 1]);
-
-      if (!finalSquareElement) {
+  const onAnimationPathChange = React.useEffectEvent(
+    (animationPaths: number[][]) => {
+      if (!boardRef.current || !styleRef.current) {
         return;
       }
 
-      const animationName = getAnimationNameFromPath(path);
+      const boardRect = boardRef.current.getBoundingClientRect();
+      const boardWidth = boardRect.width;
+      const squareWidth = boardWidth / numColumns;
 
-      finalSquareElement.style.animation = `${animationName} ${path.length * 500}ms linear forwards`;
+      const animations = animationPaths
+        ?.map((path) =>
+          getKeyframesForPath({path, squareWidth, puzzle, swipeDirection}),
+        )
+        .join("\n");
 
-      finalSquareElement.style.willChange = "transform";
+      styleRef.current.textContent = animations;
 
-      const onEnd = (): void => {
-        finalSquareElement.style.animation = "";
-        finalSquareElement.style.willChange = "";
-        finalSquareElement.removeEventListener("animationend", onEnd);
-      };
+      animationPaths.forEach((path) => {
+        const finalSquareElement = squareRefs.current.get(
+          path[path.length - 1],
+        );
 
-      finalSquareElement.addEventListener("animationend", onEnd);
-    });
+        if (!finalSquareElement) {
+          return;
+        }
+
+        const animationName = getAnimationNameFromPath(path);
+
+        finalSquareElement.style.animation = `${animationName} ${path.length * 500}ms linear forwards`;
+
+        finalSquareElement.style.willChange = "transform";
+
+        const onEnd = (): void => {
+          finalSquareElement.style.animation = "";
+          finalSquareElement.style.willChange = "";
+          finalSquareElement.removeEventListener("animationend", onEnd);
+        };
+
+        finalSquareElement.addEventListener("animationend", onEnd);
+      });
+    },
+  );
+
+  React.useLayoutEffect(() => {
+    if (!animationPaths?.length) {
+      return;
+    }
+
+    onAnimationPathChange(animationPaths);
   }, [animationPaths]);
 
   const fishSquares = puzzle.map((_, index) => (

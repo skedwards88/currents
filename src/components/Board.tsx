@@ -68,6 +68,9 @@ export default function Board({
 
   const swipeOrigin = React.useRef({x: 0, y: 0});
 
+  // To distinguish between the mouse clicking and moving vs just moving
+  const pointerIsDown = React.useRef(false);
+
   const [isSwiping, setIsSwiping] = React.useState(false);
 
   const [swipeDirection, setSwipeDirection] =
@@ -157,9 +160,15 @@ export default function Board({
       onPointerDown={(event) => {
         swipeOrigin.current = {x: event.screenX, y: event.screenY};
 
+        pointerIsDown.current = true;
+
         event.currentTarget.setPointerCapture(event.pointerId);
       }}
       onPointerMove={(event) => {
+        if (!pointerIsDown.current) {
+          return;
+        }
+
         const dx = event.screenX - swipeOrigin.current.x;
         const dy = event.screenY - swipeOrigin.current.y;
 
@@ -182,6 +191,8 @@ export default function Board({
         setSwipeDirection(nextDirection);
       }}
       onPointerUp={(event) => {
+        pointerIsDown.current = false;
+
         event.currentTarget.releasePointerCapture(event.pointerId);
 
         if (isSwiping && swipeDirection && remainingSwipes > 0) {

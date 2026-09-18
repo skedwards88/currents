@@ -39,9 +39,9 @@ export function gameReducer(
       fishHistory: [...currentGameState.fishHistory, payload.newIndexes],
     };
   } else if (payload.action === "nextLevel") {
-    return gameInit({level: currentGameState.level + 1});
+    return gameInit({level: currentGameState.level + 1, useSaved: false});
   } else if (payload.action === "replay") {
-    return gameInit({level: 1});
+    return gameInit({level: 1, useSaved: false});
   } else {
     console.log(
       `unknown action: ${(payload as unknown as {action: string}).action}`,

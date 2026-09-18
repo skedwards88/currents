@@ -7,6 +7,7 @@ import {useInstallPrompt} from "@skedwards88/shared-components/src/logic/handleI
 import {gameReducer} from "../logic/gameReducer";
 import {gameInit} from "../logic/gameInit";
 import Game from "./Game";
+import {saveToStorage} from "@skedwards88/shared-components/src/logic/safeStorage";
 
 export type DisplayState =
   "heart" | "rules" | "installOverview" | "pwaInstall" | "game";
@@ -22,9 +23,13 @@ export default function App(): React.JSX.Element {
 
   const [gameState, dispatchGameState] = React.useReducer(
     gameReducer,
-    {level: 1},
+    {useSaved: true},
     gameInit,
   );
+
+  React.useEffect(() => {
+    saveToStorage("currentsSavedState", gameState);
+  }, [gameState]);
 
   switch (display) {
     case "heart":
@@ -43,8 +48,8 @@ export default function App(): React.JSX.Element {
         <div className="App info">
           <p>
             We&apos;re not sure if this game needs rules. If you clicked here
-            hoping for guidance, please let us know at TwistedTrailGames@gmail.com! Thanks for being an early
-            playtester.
+            hoping for guidance, please let us know at
+            TwistedTrailGames@gmail.com! Thanks for being an early playtester.
           </p>
           <button onClick={() => setDisplay("game")}>Close</button>
         </div>

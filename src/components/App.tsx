@@ -43,7 +43,7 @@ export default function App(): React.JSX.Element {
         <div className="App info">
           <p>
             We&apos;re not sure if this game needs rules. If you clicked here
-            hoping for guidance, please let us know! Thanks for being an early
+            hoping for guidance, please let us know at TwistedTrailGames@gmail.com! Thanks for being an early
             playtester.
           </p>
           <button onClick={() => setDisplay("game")}>Close</button>

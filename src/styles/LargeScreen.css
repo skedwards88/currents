@@ -1,0 +1,28 @@
+
+/* almost squarish screens like the foldables */
+@media (height < 1200px) and (aspect-ratio >= 5/8) {
+  .App {
+    width: calc(var(--square-size) * 7);
+    justify-self: safe center;
+    justify-content: safe center;
+  }
+}
+
+
+/* squarish screens like the foldables */
+@media (height < 1200px) and (aspect-ratio >= 5/6) {
+  .App {
+    width: calc(var(--square-size) * 7);
+    justify-self: safe center;
+    justify-content: safe center;
+  }
+}
+
+/* larger screens */
+@media (height >= 600px) and (width >= 936px), (width >= 600px) and (height >= 936px) {
+  .App {
+    width: calc(var(--square-size) * 7);
+    justify-self: safe center;
+    justify-content: safe center;
+  }
+}

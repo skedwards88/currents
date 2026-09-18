@@ -36,7 +36,7 @@ button:disabled {
 #playControls {
   grid-area: playControls;
   align-items: center;
-  font-size: calc(var(--square-size) * 0.6);
+  font-size: calc(var(--square-size) * 0.5);
   display: grid;
   grid-template-columns: calc(var(--square-size) * 1.3) calc(var(--square-size) * 1.3) 1fr;
   justify-items: center;

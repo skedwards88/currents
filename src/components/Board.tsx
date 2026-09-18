@@ -9,6 +9,40 @@ import {
 } from "../logic/getKeyframesForPath";
 import {getFinalDirectionForPath} from "../logic/getFinalDirectionForPath";
 import {getFishIndexUpdates} from "../logic/getFishIndexUpdates";
+import {levelCompleteQ} from "../logic/levelCompleteQ";
+
+function handleSwipe({
+  direction,
+  fishIndexes,
+  puzzle,
+  setAnimationPaths,
+  dispatchGameState,
+}: {
+  direction: Direction;
+  fishIndexes: number[];
+  puzzle: (Feature | null)[];
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+  setAnimationPaths: React.Dispatch<React.SetStateAction<number[][] | null>>;
+}): void {
+  const animationSteps = getFishIndexUpdates({
+    startingFishIndexes: fishIndexes,
+    puzzle,
+    direction,
+  });
+
+  const newIndexes = animationSteps[animationSteps.length - 1];
+
+  // Don't bother moving (or deducting a swipe) if no movement is applicable
+  if (animationSteps.length === 1 && arraysMatchQ(newIndexes, fishIndexes)) {
+    return;
+  }
+
+  // The animation steps are index matched
+  // Transpose to get the path per fish
+  setAnimationPaths(transposeGrid(animationSteps));
+
+  dispatchGameState({action: "move", newIndexes});
+}
 
 export type Direction = "up" | "down" | "left" | "right";
 
@@ -140,6 +174,65 @@ export default function Board({
     onAnimationPathChange(animationPaths);
   }, [animationPaths]);
 
+  const handleKeyDown = React.useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === "Backspace" || event.key === "Delete") {
+        dispatchGameState({action: "undo"});
+        return;
+      }
+
+      if (
+        (event.key === "Enter" || event.key === "ArrowRight") &&
+        levelCompleteQ(fishIndexes, puzzle)
+      ) {
+        dispatchGameState({action: "nextLevel"});
+        return;
+      }
+
+      if (remainingSwipes <= 0) {
+        return;
+      }
+
+      let keyDirection: Direction;
+      switch (event.key) {
+        case "ArrowUp":
+          keyDirection = "up";
+          break;
+        case "ArrowDown":
+          keyDirection = "down";
+          break;
+        case "ArrowLeft":
+          keyDirection = "left";
+          break;
+        case "ArrowRight":
+          keyDirection = "right";
+          break;
+        default:
+          return;
+      }
+
+      setSwipeDirection(keyDirection);
+
+      handleSwipe({
+        direction: keyDirection,
+        fishIndexes,
+        puzzle,
+        setAnimationPaths,
+        dispatchGameState,
+      });
+    },
+    [fishIndexes, dispatchGameState, remainingSwipes, puzzle],
+  );
+
+  // Keydown events need to be attached to the window, not the specific board element
+  React.useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+
+    return (): void => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
   const fishSquares = puzzle.map((_, index) => (
     <FishSquare
       containsFish={fishIndexes.includes(index)}
@@ -196,27 +289,13 @@ export default function Board({
         event.currentTarget.releasePointerCapture(event.pointerId);
 
         if (isSwiping && swipeDirection && remainingSwipes > 0) {
-          const animationSteps = getFishIndexUpdates({
-            startingFishIndexes: fishIndexes,
-            puzzle,
+          handleSwipe({
             direction: swipeDirection,
+            fishIndexes,
+            puzzle,
+            setAnimationPaths,
+            dispatchGameState,
           });
-
-          const newIndexes = animationSteps[animationSteps.length - 1];
-
-          // Don't bother moving (or deducting a swipe) if no movement is applicable
-          if (
-            animationSteps.length === 1 &&
-            arraysMatchQ(newIndexes, fishIndexes)
-          ) {
-            return;
-          }
-
-          // The animation steps are index matched
-          // Transpose to get the path per fish
-          setAnimationPaths(transposeGrid(animationSteps));
-
-          dispatchGameState({action: "move", newIndexes});
         }
 
         setIsSwiping(false);

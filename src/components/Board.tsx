@@ -72,15 +72,17 @@ function FishSquare({
 
 export default function Board({
   puzzle,
-  fishIndexes,
+  fishHistory,
   remainingSwipes,
   dispatchGameState,
 }: {
   puzzle: GameState["puzzle"];
   remainingSwipes: GameState["remainingSwipes"];
-  fishIndexes: GameState["fishHistory"][0];
+  fishHistory: GameState["fishHistory"];
   dispatchGameState: React.Dispatch<ReducerPayload>;
 }): React.JSX.Element {
+  const fishIndexes = fishHistory[fishHistory.length - 1];
+
   const boardRef = React.useRef<HTMLDivElement>(null);
   const styleRef = React.useRef<HTMLStyleElement>(null);
   const squareRefs = React.useRef<Map<number, HTMLDivElement>>(new Map());
@@ -176,7 +178,10 @@ export default function Board({
 
   const handleKeyDown = React.useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === "Backspace" || event.key === "Delete") {
+      if (
+        (event.key === "Backspace" || event.key === "Delete") &&
+        fishHistory.length > 1
+      ) {
         dispatchGameState({action: "undo"});
         return;
       }
@@ -221,7 +226,7 @@ export default function Board({
         dispatchGameState,
       });
     },
-    [fishIndexes, dispatchGameState, remainingSwipes, puzzle],
+    [fishIndexes, fishHistory, dispatchGameState, remainingSwipes, puzzle],
   );
 
   // Keydown events need to be attached to the window, not the specific board element

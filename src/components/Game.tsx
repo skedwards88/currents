@@ -87,7 +87,7 @@ export default function Game({
       </div>
 
       <Board
-        fishIndexes={fishIndexes}
+        fishHistory={fishHistory}
         puzzle={puzzle}
         dispatchGameState={dispatchGameState}
         remainingSwipes={remainingSwipes}

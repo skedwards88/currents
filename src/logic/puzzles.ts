@@ -125,6 +125,11 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
     //Section: Whirlpool, Solution: RRL, Intent: Whirlpool + Rock + Slipstream Application
   },
   {
+    maxSwipes: 3,
+    puzzleString: "11RP5PC3FR",
+    //Section: Whirlpool, Solution: ULR, Intent: Whirlpool + Rock to show staying in whirlpool teleports
+  },
+  {
     maxSwipes: 4,
     puzzleString: "8F3P4CR2CFP2R",
     //Section: Whirlpool, Solution: LDUD, Intent: Harder Puzzle
@@ -155,19 +160,9 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
     //Section: Advanced, Solution: LDRRU, Intent: Rocks forcing slipstream use
   },
   {
-    maxSwipes: 3,
-    puzzleString: "6FE3SPC2SEN2CPW2NWF",
-    //Section: Advanced, Solution: UDD, Intent: Slipstream mania!
-  },
-  {
     maxSwipes: 4,
     puzzleString: "6FE3SPC3EN2CPW2NWF",
     //Section: Advanced, Solution: LRDD, Intent: Slipstream mania!
-  },
-  {
-    maxSwipes: 5,
-    puzzleString: "6FE3SPC3EN2CPW2N1F",
-    //Section: Advanced, Solution: LLRDD, Intent: Slipstream mania!
   },
   {
     maxSwipes: 7,

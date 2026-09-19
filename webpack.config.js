@@ -43,7 +43,22 @@ module.exports = (env, argv) => {
   });
 
   const copyPlugin = new CopyPlugin({
-    patterns: [{from: "./src/manifest.json", to: "./assets/manifest.json"}],
+    patterns: [
+      {from: "./src/manifest.json", to: "./assets/manifest.json"},
+      {from: "./src/images/favicon/favicon.ico", to: "./assets/favicon.ico"},
+      {
+        from: "./src/images/favicon/favicon_color_180.png",
+        to: "./assets/favicon_color_180.png",
+      },
+      {
+        from: "./src/images/favicon/favicon_color_192.png",
+        to: "./assets/favicon_color_192.png",
+      },
+      {
+        from: "./src/images/favicon/favicon_color_512.png",
+        to: "./assets/favicon_color_512.png",
+      },
+    ],
     options: {
       concurrency: 100,
     },

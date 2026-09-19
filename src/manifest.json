@@ -1,15 +1,29 @@
 {
   "name": "Currents",
   "short_name": "Currents",
-  "description": "A spatial puzzle",
-  "id": "?currents=20260905",
+  "description": "A cute and relaxing ocean themed puzzle game",
+  "id": "?currents=20260919",
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "https://currents.twistedtrailgames.com",
-  "background_color": "#373647",
-  "theme_color": "#373647",
+  "background_color": "#0e09ab",
+  "theme_color": "#02b4f0",
   "shortcuts": [],
-  "categories": ["games", "puzzle"]
+  "categories": ["games", "puzzle"],
+  "icons": [
+    {
+      "src": "favicon_color_192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon_color_512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
 }

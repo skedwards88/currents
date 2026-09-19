@@ -8,6 +8,8 @@ import {gameReducer} from "../logic/gameReducer";
 import {gameInit} from "../logic/gameInit";
 import Game from "./Game";
 import {saveToStorage} from "@skedwards88/shared-components/src/logic/safeStorage";
+import {inferEventsToLog} from "../logic/inferEventsToLog";
+import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 
 export type DisplayState =
   "heart" | "rules" | "installOverview" | "pwaInstall" | "game";
@@ -31,6 +33,22 @@ export default function App(): React.JSX.Element {
     saveToStorage("currentsSavedState", gameState);
   }, [gameState]);
 
+  // Store the previous state so that we can infer which analytics events to send
+  const previousGameStateRef = React.useRef(gameState);
+
+  // Send analytics following reducer updates, if needed
+  React.useEffect(() => {
+    const previousState = previousGameStateRef.current;
+
+    const analyticsToLog = inferEventsToLog(previousState, gameState);
+
+    if (analyticsToLog.length) {
+      sendAnalyticsCF({userId, sessionId, analyticsToLog});
+    }
+
+    previousGameStateRef.current = gameState;
+  }, [gameState, sessionId, userId]);
+
   switch (display) {
     case "heart":
       return (
@@ -40,6 +58,8 @@ export default function App(): React.JSX.Element {
           repoName={"currents"}
           includeExtraInfo={true}
           includeWordAttribution={false}
+          userId={userId}
+          sessionId={sessionId}
         ></MoreGames>
       );
 

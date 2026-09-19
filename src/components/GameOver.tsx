@@ -2,6 +2,7 @@ import {useMetadataContext} from "@skedwards88/shared-components/src/components/
 import Share from "@skedwards88/shared-components/src/components/Share";
 import logo from "../images/favicon/favicon_color_transparent.svg";
 import {type ReducerPayload} from "../logic/gameReducer";
+import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 
 export default function GameOver({
   dispatchGameState,
@@ -18,7 +19,7 @@ export default function GameOver({
         appName="Currents"
         text="Check out this puzzle!"
         url="https://currents.twistedtrailgames.com"
-        origin="game over"
+        origin="game_over"
         content="Share"
         userId={userId}
         sessionId={sessionId}
@@ -27,7 +28,20 @@ export default function GameOver({
         Replay
       </button>
       <p>Check out more games at:</p>
-      <a href="https://currents.twistedtrailgames.com">TwistedTrailGames.com</a>
+      <a
+        href="https://twistedtrailgames.com"
+        onClick={() =>
+          sendAnalyticsCF({
+            userId,
+            sessionId,
+            analyticsToLog: [
+              {eventName: "click_ttg_link", eventInfo: {origin: "game_over"}},
+            ],
+          })
+        }
+      >
+        TwistedTrailGames.com
+      </a>
     </div>
   );
 }

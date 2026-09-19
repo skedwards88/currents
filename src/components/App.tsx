@@ -10,6 +10,7 @@ import Game from "./Game";
 import {saveToStorage} from "@skedwards88/shared-components/src/logic/safeStorage";
 import {inferEventsToLog} from "../logic/inferEventsToLog";
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
+import packageJson from "../../package.json";
 
 export type DisplayState =
   "heart" | "rules" | "installOverview" | "pwaInstall" | "game";
@@ -60,6 +61,7 @@ export default function App(): React.JSX.Element {
           includeWordAttribution={false}
           userId={userId}
           sessionId={sessionId}
+          version={packageJson.version}
         ></MoreGames>
       );
 

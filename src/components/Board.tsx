@@ -278,7 +278,15 @@ export default function Board({
         dispatchGameState,
       });
     },
-    [fishIndexes, fishHistory, dispatchGameState, maxSwipes, puzzle],
+    [
+      fishIndexes,
+      fishHistory,
+      dispatchGameState,
+      maxSwipes,
+      puzzle,
+      setAnimationPaths,
+      setSwipeDirection,
+    ],
   );
 
   // Keydown events need to be attached to the window, not the specific board element

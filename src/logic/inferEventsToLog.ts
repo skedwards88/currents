@@ -76,5 +76,15 @@ export function inferEventsToLog(
     });
   }
 
+  // Hint given
+  if (oldState.hintCount < newState.hintCount) {
+    analyticsToLog.push({
+      eventName: "hint",
+      eventInfo: {
+        level: newLevel,
+      },
+    });
+  }
+
   return analyticsToLog;
 }

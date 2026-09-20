@@ -6,6 +6,7 @@ describe("validateSavedState", () => {
     level: 1,
     maxSwipes: 2,
     fishHistory: [[17]],
+    hintCount: 0,
     puzzle: [
       null,
       null,
@@ -66,6 +67,12 @@ describe("validateSavedState", () => {
     // @ts-expect-error intentionally testing invalid input
     expect(validateSavedState({...validState, maxSwipes: "1"})).toBe(false);
     expect(validateSavedState({...validState, maxSwipes: -1})).toBe(false);
+  });
+
+  test("false if invalid hint count", () => {
+    // @ts-expect-error intentionally testing invalid input
+    expect(validateSavedState({...validState, hintCount: "1"})).toBe(false);
+    expect(validateSavedState({...validState, hintCount: -1})).toBe(false);
   });
 
   test("false if puzzle wrong length", () => {

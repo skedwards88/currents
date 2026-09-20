@@ -39,6 +39,7 @@ export function gameReducer(
     return {
       ...currentGameState,
       fishHistory: payload.newFishHistory,
+      hintCount: currentGameState.hintCount + 1,
     };
   } else if (payload.action === "nextLevel") {
     return gameInit({level: currentGameState.level + 1, useSaved: false});

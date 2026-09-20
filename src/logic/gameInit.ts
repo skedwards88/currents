@@ -33,6 +33,7 @@ export type GameState = {
   puzzle: (Feature | null)[];
   maxSwipes: number;
   fishHistory: number[][];
+  hintCount: number;
 };
 
 export function gameInit({
@@ -76,12 +77,13 @@ export function gameInit({
   }
 
   const [puzzleWithoutFish, startingFishIndexes] =
-    convertStringToPuzzleAndFishIndexes(puzzles[level - 1].puzzleString);
+    convertStringToPuzzleAndFishIndexes(puzzles[level - 1].puzzleString); // -1 because 0-indexed
 
   return {
-    level, // -1 because 0-indexed
-    maxSwipes: puzzles[level - 1].maxSwipes,
+    level,
+    maxSwipes: puzzles[level - 1].maxSwipes, // -1 because 0-indexed
     fishHistory: [startingFishIndexes],
     puzzle: puzzleWithoutFish,
+    hintCount: 0,
   };
 }

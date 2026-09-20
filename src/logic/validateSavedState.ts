@@ -20,13 +20,17 @@ export function validateSavedState(savedState: GameState): boolean {
     return false;
   }
 
+  if (!Number.isInteger(savedState.hintCount) || savedState.hintCount < 0) {
+    return false;
+  }
+
   if (savedState?.puzzle.length != numColumns * numRows) {
     return false;
   }
 
   const [officialPuzzle, officialFishIndexes] =
     convertStringToPuzzleAndFishIndexes(
-      puzzles[savedState.level - 1].puzzleString,
+      puzzles[savedState.level - 1].puzzleString, // -1 because 0-indexed
     );
 
   if (!arraysMatchQ(savedState?.puzzle, officialPuzzle)) {

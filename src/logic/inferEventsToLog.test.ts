@@ -9,6 +9,7 @@ describe("inferEventsToLog", () => {
     fishHistory: [[1]],
     level: 1,
     maxSwipes: 1,
+    hintCount: 0,
   };
 
   test("new level + completed level", () => {
@@ -34,7 +35,7 @@ describe("inferEventsToLog", () => {
   test("completed last level", () => {
     const lastLevel = puzzles.length;
     const [lastPuzzle, _] = convertStringToPuzzleAndFishIndexes(
-      puzzles[lastLevel - 1].puzzleString,
+      puzzles[lastLevel - 1].puzzleString, // -1 because 0-indexed
     );
     const coralIndexes = lastPuzzle.reduce(
       (accumulatedIndexes: number[], currentFeature, currentIndex) => {
@@ -121,5 +122,23 @@ describe("inferEventsToLog", () => {
         },
       },
     ]);
+  });
+
+  test("hint", () => {
+    const oldState = {
+      ...baseState,
+    };
+    const newState = {...baseState, hintCount: 1};
+
+    expect(inferEventsToLog(oldState, newState)).toStrictEqual([
+      {
+        eventName: "hint",
+        eventInfo: {
+          level: baseState.level,
+        },
+      },
+    ]);
+
+    expect(inferEventsToLog(newState, oldState)).toStrictEqual([]);
   });
 });

@@ -18,6 +18,12 @@ function findArrayMatchLength<
   return score;
 }
 
+type Hint = {
+  newHistory: GameState["fishHistory"];
+  hintDirection: Direction;
+  nextAnimationSteps: number[][];
+};
+
 export function getHint({
   playedFishHistory,
   puzzle,
@@ -26,7 +32,7 @@ export function getHint({
   playedFishHistory: GameState["fishHistory"];
   puzzle: GameState["puzzle"];
   maxSwipes: GameState["maxSwipes"];
-}): [GameState["fishHistory"], Direction] {
+}): Hint {
   const startingFishIndexes = playedFishHistory[0];
 
   // Find all solutions
@@ -35,10 +41,10 @@ export function getHint({
     puzzle,
     maxSwipes,
   });
-  console.log(JSON.stringify(solutions));
+
   // Find each solution history, find how many steps match the played history before they diverge
   const scores = solutions.map((solution) =>
-    findArrayMatchLength(playedFishHistory, solution[0]),
+    findArrayMatchLength(playedFishHistory, solution.fishHistory),
   );
 
   // Find the solutions that match the played history for the longest
@@ -49,16 +55,19 @@ export function getHint({
 
   // Just pick the first of the best
   // Not bothering to find the shortest solution, since they should all be the same length based on the puzzles validation
-  const [solutionHistory, solutionDirections] = bestSolutions[0];
+  const {
+    fishHistory: solutionHistory,
+    swipes: solutionDirections,
+    animationSteps: solutionAnimationSteps,
+  } = bestSolutions[0];
 
   // If the max score equals the current history length, just extend the current history by 1
   // Otherwise, backtrack to where the paths diverged and then extend by 1
-  if (maxScore === playedFishHistory.length) {
-    return [playedFishHistory, solutionDirections[maxScore - 1]];
-  } else {
-    const newHistory = solutionHistory.slice(0, maxScore);
+  const newHistory = solutionHistory.slice(0, maxScore);
 
-    const nextDirection = solutionDirections[maxScore - 1];
-    return [newHistory, nextDirection];
-  }
+  const hintDirection = solutionDirections[maxScore - 1];
+
+  const nextAnimationSteps = solutionAnimationSteps[maxScore - 1];
+
+  return {newHistory, hintDirection, nextAnimationSteps};
 }

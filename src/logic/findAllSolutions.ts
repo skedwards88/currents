@@ -4,7 +4,13 @@ import {type GameState} from "./gameInit";
 import {getFishIndexUpdates} from "./getFishIndexUpdates";
 import {levelCompleteQ} from "./levelCompleteQ";
 
-// Returns tuples of fish histories and swipe directions that lead to a solution
+type Solution = {
+  fishHistory: GameState["fishHistory"];
+  swipes: Direction[];
+  animationSteps: number[][][];
+};
+
+// Returns lists of fish histories, swipe directions, and animation steps that lead to a solution
 export function findAllSolutions({
   startingFishIndexes,
   puzzle,
@@ -13,27 +19,34 @@ export function findAllSolutions({
   startingFishIndexes: GameState["fishHistory"][0];
   puzzle: GameState["puzzle"];
   maxSwipes: GameState["maxSwipes"];
-}): [GameState["fishHistory"], Direction[]][] {
+}): Solution[] {
+  // [GameState["fishHistory"], Direction[], number[][]][]
   const initialFishHistory = [startingFishIndexes];
   const initialDirections: Direction[] = [];
+  const initialAnimationSteps: number[][][] = [];
 
-  const solutions: [number[][], Direction[]][] = [];
+  const solutions: Solution[] = [];
 
   function extendPath(
-    startingFishHistory: number[][],
-    startingDirections: Direction[],
+    currentFishHistory: number[][],
+    currentStartingDirections: Direction[],
+    currentAnimationSteps: number[][][],
   ): void {
     const startingFishIndexes =
-      startingFishHistory[startingFishHistory.length - 1];
+      currentFishHistory[currentFishHistory.length - 1];
 
     // If solved, record and return
     if (levelCompleteQ(startingFishIndexes, puzzle)) {
-      solutions.push([startingFishHistory, startingDirections]);
+      solutions.push({
+        fishHistory: currentFishHistory,
+        swipes: currentStartingDirections,
+        animationSteps: currentAnimationSteps,
+      });
       return;
     }
 
     // If out of swipes, return
-    if (startingFishHistory.length > maxSwipes) {
+    if (currentFishHistory.length > maxSwipes) {
       return;
     }
 
@@ -53,7 +66,7 @@ export function findAllSolutions({
 
       // If the fish are where they've been previously, abort this path and skip to the next direction (because a path that loops on itself is not the shortest path)
       if (
-        startingFishHistory.some((priorFishIndexes) =>
+        currentFishHistory.some((priorFishIndexes) =>
           arraysMatchQ(priorFishIndexes, newFishIndexes),
         )
       ) {
@@ -62,13 +75,14 @@ export function findAllSolutions({
 
       // Otherwise, recurse
       extendPath(
-        [...startingFishHistory, newFishIndexes],
-        [...startingDirections, direction],
+        [...currentFishHistory, newFishIndexes],
+        [...currentStartingDirections, direction],
+        [...currentAnimationSteps, animationSteps],
       );
     }
   }
 
-  extendPath(initialFishHistory, initialDirections);
+  extendPath(initialFishHistory, initialDirections, initialAnimationSteps);
 
   return solutions;
 }

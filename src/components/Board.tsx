@@ -74,11 +74,11 @@ function FishSquare({
 export default function Board({
   puzzle,
   fishHistory,
-  remainingSwipes,
+  maxSwipes,
   dispatchGameState,
 }: {
   puzzle: GameState["puzzle"];
-  remainingSwipes: GameState["remainingSwipes"];
+  maxSwipes: GameState["maxSwipes"];
   fishHistory: GameState["fishHistory"];
   dispatchGameState: React.Dispatch<ReducerPayload>;
 }): React.JSX.Element {
@@ -195,6 +195,8 @@ export default function Board({
         return;
       }
 
+      const remainingSwipes = maxSwipes - (fishHistory.length - 1);
+
       if (remainingSwipes <= 0) {
         return;
       }
@@ -227,7 +229,7 @@ export default function Board({
         dispatchGameState,
       });
     },
-    [fishIndexes, fishHistory, dispatchGameState, remainingSwipes, puzzle],
+    [fishIndexes, fishHistory, dispatchGameState, maxSwipes, puzzle],
   );
 
   // Keydown events need to be attached to the window, not the specific board element
@@ -293,6 +295,8 @@ export default function Board({
         pointerIsDown.current = false;
 
         event.currentTarget.releasePointerCapture(event.pointerId);
+
+        const remainingSwipes = maxSwipes - (fishHistory.length - 1);
 
         if (isSwiping && swipeDirection && remainingSwipes > 0) {
           handleSwipe({

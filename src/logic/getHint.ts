@@ -25,7 +25,7 @@ export function getHint({
 }: {
   playedFishHistory: GameState["fishHistory"];
   puzzle: GameState["puzzle"];
-  maxSwipes: GameState["remainingSwipes"];
+  maxSwipes: GameState["maxSwipes"];
 }): [GameState["fishHistory"], Direction] {
   const startingFishIndexes = playedFishHistory[0];
 

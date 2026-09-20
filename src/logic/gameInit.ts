@@ -31,7 +31,7 @@ export type Feature = Exclude<FeatureWithFish, "fish">;
 export type GameState = {
   level: number;
   puzzle: (Feature | null)[];
-  remainingSwipes: number;
+  maxSwipes: number;
   fishHistory: number[][];
 };
 
@@ -80,7 +80,7 @@ export function gameInit({
 
   return {
     level, // -1 because 0-indexed
-    remainingSwipes: puzzles[level - 1].maxSwipes,
+    maxSwipes: puzzles[level - 1].maxSwipes,
     fishHistory: [startingFishIndexes],
     puzzle: puzzleWithoutFish,
   };

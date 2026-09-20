@@ -102,7 +102,7 @@ export default function App(): React.JSX.Element {
     default:
       return (
         <Game
-          remainingSwipes={gameState.remainingSwipes}
+          maxSwipes={gameState.maxSwipes}
           fishHistory={gameState.fishHistory}
           puzzle={gameState.puzzle}
           setDisplay={setDisplay}

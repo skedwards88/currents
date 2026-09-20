@@ -16,10 +16,7 @@ export function validateSavedState(savedState: GameState): boolean {
     return false;
   }
 
-  if (
-    !Number.isInteger(savedState.remainingSwipes) ||
-    savedState.remainingSwipes < 0
-  ) {
+  if (!Number.isInteger(savedState.maxSwipes) || savedState.maxSwipes < 0) {
     return false;
   }
 

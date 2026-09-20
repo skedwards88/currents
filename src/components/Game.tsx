@@ -9,10 +9,14 @@ import Board from "./Board";
 import GameOver from "./GameOver";
 
 function RemainingSwipes({
-  remainingSwipes,
+  maxSwipes,
+  fishHistory,
 }: {
-  remainingSwipes: number;
+  maxSwipes: GameState["maxSwipes"];
+  fishHistory: GameState["fishHistory"];
 }): React.JSX.Element {
+  const remainingSwipes = maxSwipes - (fishHistory.length - 1);
+
   const className =
     remainingSwipes === 0
       ? "errorText"
@@ -30,12 +34,12 @@ function RemainingSwipes({
 export default function Game({
   dispatchGameState,
   setDisplay,
-  remainingSwipes,
+  maxSwipes,
   fishHistory,
   puzzle,
   level,
 }: {
-  remainingSwipes: number;
+  maxSwipes: GameState["maxSwipes"];
   fishHistory: GameState["fishHistory"];
   puzzle: GameState["puzzle"];
   dispatchGameState: React.Dispatch<ReducerPayload>;
@@ -82,7 +86,7 @@ export default function Game({
             Next level
           </button>
         ) : (
-          <RemainingSwipes remainingSwipes={remainingSwipes} />
+          <RemainingSwipes maxSwipes={maxSwipes} fishHistory={fishHistory} />
         )}
       </div>
 
@@ -90,7 +94,7 @@ export default function Game({
         fishHistory={fishHistory}
         puzzle={puzzle}
         dispatchGameState={dispatchGameState}
-        remainingSwipes={remainingSwipes}
+        maxSwipes={maxSwipes}
         // Force the child to remount on refresh
         key={resetKey}
       ></Board>

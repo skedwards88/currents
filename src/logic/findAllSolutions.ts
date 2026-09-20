@@ -12,7 +12,7 @@ export function findAllSolutions({
 }: {
   startingFishIndexes: GameState["fishHistory"][0];
   puzzle: GameState["puzzle"];
-  maxSwipes: GameState["remainingSwipes"];
+  maxSwipes: GameState["maxSwipes"];
 }): [GameState["fishHistory"], Direction[]][] {
   const initialFishHistory = [startingFishIndexes];
   const initialDirections: Direction[] = [];

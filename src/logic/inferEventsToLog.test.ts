@@ -8,7 +8,7 @@ describe("inferEventsToLog", () => {
     puzzle: ["coral", "rock", null],
     fishHistory: [[1]],
     level: 1,
-    remainingSwipes: 1,
+    maxSwipes: 1,
   };
 
   test("new level + completed level", () => {

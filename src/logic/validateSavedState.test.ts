@@ -4,7 +4,7 @@ import {validateSavedState} from "./validateSavedState";
 describe("validateSavedState", () => {
   const validState: GameState = {
     level: 1,
-    remainingSwipes: 2,
+    maxSwipes: 2,
     fishHistory: [[17]],
     puzzle: [
       null,
@@ -64,12 +64,8 @@ describe("validateSavedState", () => {
 
   test("false if invalid swipes", () => {
     // @ts-expect-error intentionally testing invalid input
-    expect(validateSavedState({...validState, remainingSwipes: "1"})).toBe(
-      false,
-    );
-    expect(validateSavedState({...validState, remainingSwipes: -1})).toBe(
-      false,
-    );
+    expect(validateSavedState({...validState, maxSwipes: "1"})).toBe(false);
+    expect(validateSavedState({...validState, maxSwipes: -1})).toBe(false);
   });
 
   test("false if puzzle wrong length", () => {
@@ -111,6 +107,6 @@ describe("validateSavedState", () => {
 
   test("true otherwise", () => {
     expect(validateSavedState(validState)).toBe(true);
-    expect(validateSavedState({...validState, remainingSwipes: 0})).toBe(true);
+    expect(validateSavedState({...validState, maxSwipes: 0})).toBe(true);
   });
 });

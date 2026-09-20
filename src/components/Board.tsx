@@ -44,7 +44,8 @@ function handleSwipe({
   dispatchGameState({action: "move", newIndexes});
 }
 
-export type Direction = "up" | "down" | "left" | "right";
+export const allDirections = ["up", "down", "left", "right"] as const;
+export type Direction = (typeof allDirections)[number];
 
 function FeatureSquare({
   feature,

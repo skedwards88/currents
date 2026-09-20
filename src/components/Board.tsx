@@ -10,6 +10,42 @@ import {
 import {getFinalDirectionForPath} from "../logic/getFinalDirectionForPath";
 import {getFishIndexUpdates} from "../logic/getFishIndexUpdates";
 import {levelCompleteQ} from "../logic/levelCompleteQ";
+import {getHint} from "../logic/getHint";
+
+export function handleHint({
+  fishHistory,
+  puzzle,
+  maxSwipes,
+  setSwipeDirection,
+  setAnimationPaths,
+  dispatchGameState,
+}: {
+  fishHistory: GameState["fishHistory"];
+  puzzle: GameState["puzzle"];
+  maxSwipes: GameState["maxSwipes"];
+  setSwipeDirection: React.Dispatch<React.SetStateAction<Direction>>;
+  setAnimationPaths: React.Dispatch<React.SetStateAction<number[][] | null>>;
+  dispatchGameState: React.Dispatch<ReducerPayload>;
+}): void {
+  const {newHistory, hintDirection, nextAnimationSteps} = getHint({
+    playedFishHistory: fishHistory,
+    puzzle,
+    maxSwipes,
+  });
+
+  setSwipeDirection(hintDirection);
+
+  const newIndexes = nextAnimationSteps[nextAnimationSteps.length - 1];
+
+  // The animation steps are index matched
+  // Transpose to get the path per fish
+  setAnimationPaths(transposeGrid(nextAnimationSteps));
+
+  dispatchGameState({
+    action: "incorporateHint",
+    newFishHistory: [...newHistory, newIndexes],
+  });
+}
 
 function handleSwipe({
   direction,
@@ -19,7 +55,7 @@ function handleSwipe({
   dispatchGameState,
 }: {
   direction: Direction;
-  fishIndexes: number[];
+  fishIndexes: GameState["fishHistory"][0];
   puzzle: (Feature | null)[];
   dispatchGameState: React.Dispatch<ReducerPayload>;
   setAnimationPaths: React.Dispatch<React.SetStateAction<number[][] | null>>;
@@ -76,11 +112,19 @@ export default function Board({
   fishHistory,
   maxSwipes,
   dispatchGameState,
+  swipeDirection,
+  setSwipeDirection,
+  animationPaths,
+  setAnimationPaths,
 }: {
   puzzle: GameState["puzzle"];
   maxSwipes: GameState["maxSwipes"];
   fishHistory: GameState["fishHistory"];
   dispatchGameState: React.Dispatch<ReducerPayload>;
+  swipeDirection: Direction;
+  setSwipeDirection: React.Dispatch<React.SetStateAction<Direction>>;
+  animationPaths: number[][] | null;
+  setAnimationPaths: React.Dispatch<React.SetStateAction<number[][] | null>>;
 }): React.JSX.Element {
   const fishIndexes = fishHistory[fishHistory.length - 1];
 
@@ -109,13 +153,6 @@ export default function Board({
   const pointerIsDown = React.useRef(false);
 
   const [isSwiping, setIsSwiping] = React.useState(false);
-
-  const [swipeDirection, setSwipeDirection] =
-    React.useState<Direction>("right");
-
-  const [animationPaths, setAnimationPaths] = React.useState<number[][] | null>(
-    null,
-  );
 
   const finalDirectionByIndex: Map<number, Direction> = new Map();
   animationPaths?.forEach((path) => {
@@ -196,6 +233,18 @@ export default function Board({
       }
 
       const remainingSwipes = maxSwipes - (fishHistory.length - 1);
+
+      if (event.key === "q" && !levelCompleteQ(fishIndexes, puzzle)) {
+        handleHint({
+          fishHistory,
+          puzzle,
+          maxSwipes,
+          setSwipeDirection,
+          setAnimationPaths,
+          dispatchGameState,
+        });
+        return;
+      }
 
       if (remainingSwipes <= 0) {
         return;

@@ -26,6 +26,11 @@
   background-image: url("@skedwards88/shared-components/src/images/icons/undo_arrow.svg");
 }
 
+
+#hintButton {
+  background-image: url("@skedwards88/shared-components/src/images/icons/magnifying_glass.svg");
+}
+
 #rulesButton {
   background-image: url("@skedwards88/shared-components/src/images/icons/info.svg");
 }

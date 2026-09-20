@@ -5,7 +5,8 @@ export type ReducerPayload =
       action: "reset";
     }
   | {action: "undo"}
-  | {action: "move"; newIndexes: number[]}
+  | {action: "move"; newIndexes: GameState["fishHistory"][0]}
+  | {action: "incorporateHint"; newFishHistory: GameState["fishHistory"]}
   | {action: "nextLevel"}
   | {action: "replay"};
 
@@ -32,6 +33,12 @@ export function gameReducer(
     return {
       ...currentGameState,
       fishHistory: [...currentGameState.fishHistory, payload.newIndexes],
+    };
+  }
+  if (payload.action === "incorporateHint") {
+    return {
+      ...currentGameState,
+      fishHistory: payload.newFishHistory,
     };
   } else if (payload.action === "nextLevel") {
     return gameInit({level: currentGameState.level + 1, useSaved: false});

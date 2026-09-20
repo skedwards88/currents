@@ -5,7 +5,7 @@ import {type DisplayState} from "./App";
 import ControlBar from "./ControlBar";
 import {levelCompleteQ} from "../logic/levelCompleteQ";
 import {puzzles} from "../logic/puzzles";
-import Board from "./Board";
+import Board, {type Direction, handleHint} from "./Board";
 import GameOver from "./GameOver";
 
 function RemainingSwipes({
@@ -46,6 +46,14 @@ export default function Game({
   setDisplay: React.Dispatch<React.SetStateAction<DisplayState>>;
   level: GameState["level"];
 }): React.JSX.Element {
+  // Swipe direction and animation paths live here instead of board so that the hint button can access them as well
+  const [swipeDirection, setSwipeDirection] =
+    React.useState<Direction>("right");
+
+  const [animationPaths, setAnimationPaths] = React.useState<number[][] | null>(
+    null,
+  );
+
   const fishIndexes = fishHistory[fishHistory.length - 1];
 
   const levelComplete = levelCompleteQ(fishIndexes, puzzle);
@@ -78,6 +86,21 @@ export default function Game({
             dispatchGameState({action: "undo"});
           }}
         ></button>
+        <button
+          id="hintButton"
+          className="playControlButton"
+          disabled={levelComplete}
+          onClick={() => {
+            handleHint({
+              fishHistory,
+              puzzle,
+              maxSwipes,
+              setSwipeDirection,
+              setAnimationPaths,
+              dispatchGameState,
+            });
+          }}
+        ></button>
         {levelComplete ? (
           <button
             id="nextLevelButton"
@@ -95,6 +118,10 @@ export default function Game({
         puzzle={puzzle}
         dispatchGameState={dispatchGameState}
         maxSwipes={maxSwipes}
+        swipeDirection={swipeDirection}
+        setSwipeDirection={setSwipeDirection}
+        animationPaths={animationPaths}
+        setAnimationPaths={setAnimationPaths}
         // Force the child to remount on refresh
         key={resetKey}
       ></Board>

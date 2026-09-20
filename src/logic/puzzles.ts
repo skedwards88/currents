@@ -95,7 +95,7 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
     //Section: Rock and Slipstream, Solution: LUDRR, Intent: Harder Puzzle
   },
   {
-    maxSwipes: 3,
+    maxSwipes: 2,
     puzzleString: "9C3FC4N4F",
     //Section: Edge, Solution: RUD, Intent: Shows edge blocks
   },

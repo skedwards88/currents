@@ -7,10 +7,12 @@ button:disabled {
     grid-template-areas:
     "standardControls"
     "playControls"
+    "progressBar"
     "board";
   grid-template-rows:
     auto
     1fr
+    auto
     1fr;
 }
 
@@ -134,4 +136,56 @@ button:disabled {
 
 .warningText {
   color: rgb(237 138 157);
+}
+
+#progressBar {
+  grid-area: progressBar;
+  height: 1vh;
+  width: calc(var(--square-size) * 4.5);
+  justify-self: center;
+  background-color: #d9a4ed;
+  background-color: var(--dark-color);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  column-gap: 0;
+  row-gap: 0;
+  margin-bottom: 2vh;
+  border: 2px solid var(--light-color);
+  position: relative;
+}
+
+#progress {
+  grid-area: 1 / 1 / 2 / 2;
+  background-color: var(--light-color);
+  position: relative;
+  transition: width 0.4s ease;
+}
+
+#progressFish {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(50%, -50%);
+  height: calc(var(--square-size) * 0.6);
+  aspect-ratio: 1;
+  background-image: url("../images/fish.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+}
+
+#progressCoral {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(40%, -70%);
+  height: calc(var(--square-size) * 0.5);
+  aspect-ratio: 1;
+  background-image: url("../images/coral.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
 }

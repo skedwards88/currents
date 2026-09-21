@@ -113,6 +113,18 @@ export default function Game({
         )}
       </div>
 
+      <div id="progressBar">
+        <div
+          id="progress"
+          style={{
+            width: `${Math.min(((level - 1) / puzzles.length) * 100, 100)}%`,
+          }}
+        >
+          <div id="progressFish"></div>
+        </div>
+        <div id="progressCoral"></div>
+      </div>
+
       <Board
         fishHistory={fishHistory}
         puzzle={puzzle}

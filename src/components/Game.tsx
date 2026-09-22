@@ -62,7 +62,26 @@ export default function Game({
 
   const [resetKey, setResetKey] = React.useState(1);
 
-  return gameComplete ? (
+  const [delayElapsed, setDelayElapsed] = React.useState(false);
+
+  // Delay before showing the game over screen so it isn't so abrupt
+  React.useEffect(() => {
+    if (!gameComplete) return;
+
+    const timer = setTimeout(() => setDelayElapsed(true), 500);
+    return (): void => {
+      clearTimeout(timer);
+
+      setDelayElapsed(false);
+    };
+  }, [gameComplete]);
+
+  const progress =
+    levelComplete && level === puzzles.length
+      ? 100
+      : ((level - 1) / puzzles.length) * 100;
+
+  return gameComplete && delayElapsed ? (
     <GameOver dispatchGameState={dispatchGameState}></GameOver>
   ) : (
     <div id="game" className="App">
@@ -101,7 +120,7 @@ export default function Game({
             });
           }}
         ></button>
-        {levelComplete ? (
+        {levelComplete && !gameComplete ? (
           <button
             id="nextLevelButton"
             onClick={() => dispatchGameState({action: "nextLevel"})}
@@ -117,7 +136,7 @@ export default function Game({
         <div
           id="progress"
           style={{
-            width: `${Math.min(((level - 1) / puzzles.length) * 100, 100)}%`,
+            width: `${Math.min(progress, 100)}%`,
           }}
         >
           <div id="progressFish"></div>

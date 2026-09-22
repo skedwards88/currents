@@ -15,18 +15,21 @@ export default function GameOver({
     <div id="gameOver" className="App info">
       <p>Congratulations, you won!</p>
       <img src={logo} alt="Currents logo" id="logo" />
-      <Share
-        appName="Currents"
-        text="Check out this puzzle!"
-        url="https://currents.twistedtrailgames.com"
-        origin="game_over"
-        content="Share"
-        userId={userId}
-        sessionId={sessionId}
-      />
-      <button onClick={() => dispatchGameState({action: "replay"})}>
-        Replay
-      </button>
+      <div>
+        <Share
+          appName="Currents"
+          text="Check out this puzzle!"
+          url="https://currents.twistedtrailgames.com"
+          origin="game_over"
+          content="Share"
+          userId={userId}
+          sessionId={sessionId}
+        />
+        <button onClick={() => dispatchGameState({action: "replay"})}>
+          Replay
+        </button>
+      </div>
+
       <p>Check out more games at:</p>
       <a
         href="https://twistedtrailgames.com"

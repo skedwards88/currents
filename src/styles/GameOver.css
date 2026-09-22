@@ -1,4 +1,14 @@
 #gameOver {
   background-color: var(--light-color);
   font-size: var(--default-font-size);
+  overflow: auto;
+}
+
+#gameOver > #logo {
+  height: 80vmin;
+  aspect-ratio: 1;
+}
+
+#gameOver > p {
+  margin-bottom: 0.6em;
 }

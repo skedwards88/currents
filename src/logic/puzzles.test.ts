@@ -4,6 +4,8 @@ import {puzzles} from "./puzzles";
 import {validPuzzleStringQ} from "./validPuzzleStringQ";
 
 describe("puzzle validation", () => {
+  const verbose = true;
+
   test("every puzzle string is valid", () => {
     puzzles.forEach((puzzle) => {
       expect(validPuzzleStringQ(puzzle.puzzleString)).toBe(true);
@@ -24,10 +26,16 @@ describe("puzzle validation", () => {
         maxSwipes,
       });
 
+      if (verbose) {
+        console.log(
+          `Puzzle ${puzzleData.puzzleString}:\n${solutions.map((solution) => solution.swipes).join("\n")}`,
+        );
+      }
+
       expect(solutions.length).toBeGreaterThan(0);
 
       solutions.forEach(({swipes}) => {
-        if (swipes.length != maxSwipes) {
+        if (verbose && swipes.length != maxSwipes) {
           throw new Error(
             `${puzzleData.puzzleString} does not require ${maxSwipes} swipes: ${JSON.stringify(swipes)} (${swipes.length} swipes)`,
           );

@@ -1,3 +1,5 @@
+export const firstBonusLevel = 31;
+
 export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
   {
     maxSwipes: 2,

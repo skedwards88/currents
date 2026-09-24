@@ -4,7 +4,7 @@ import {type ReducerPayload} from "../logic/gameReducer";
 import {type DisplayState} from "./App";
 import ControlBar from "./ControlBar";
 import {levelCompleteQ} from "../logic/levelCompleteQ";
-import {puzzles} from "../logic/puzzles";
+import {firstBonusLevel, puzzles} from "../logic/puzzles";
 import Board, {type Direction, handleHint} from "./Board";
 import GameOver from "./GameOver";
 
@@ -58,15 +58,26 @@ export default function Game({
 
   const levelComplete = levelCompleteQ(fishIndexes, puzzle);
 
-  const gameComplete = levelComplete && level === puzzles.length;
+  const basicLevelsComplete = levelComplete && level >= firstBonusLevel - 1;
+  const bonusLevelsComplete = levelComplete && level === puzzles.length;
+  const isOnBonusLevel = level >= firstBonusLevel;
 
   const [resetKey, setResetKey] = React.useState(1);
 
   const [delayElapsed, setDelayElapsed] = React.useState(false);
 
+  let showGameOver = false;
+  if (basicLevelsComplete && !isOnBonusLevel) {
+    showGameOver = true;
+  }
+  if (bonusLevelsComplete && isOnBonusLevel) {
+    showGameOver = true;
+  }
+
   // Delay before showing the game over screen so it isn't so abrupt
   React.useEffect(() => {
-    if (!gameComplete) return;
+    if (!basicLevelsComplete) return;
+    if (isOnBonusLevel && !bonusLevelsComplete) return;
 
     const timer = setTimeout(() => setDelayElapsed(true), 500);
     return (): void => {
@@ -74,15 +85,18 @@ export default function Game({
 
       setDelayElapsed(false);
     };
-  }, [gameComplete]);
+  }, [basicLevelsComplete, bonusLevelsComplete, isOnBonusLevel]);
 
   const progress =
     levelComplete && level === puzzles.length
       ? 100
       : ((level - 1) / puzzles.length) * 100;
 
-  return gameComplete && delayElapsed ? (
-    <GameOver dispatchGameState={dispatchGameState}></GameOver>
+  return showGameOver && delayElapsed ? (
+    <GameOver
+      dispatchGameState={dispatchGameState}
+      bonusLevelsComplete={bonusLevelsComplete}
+    ></GameOver>
   ) : (
     <div id="game" className="App">
       <ControlBar setDisplay={setDisplay}></ControlBar>
@@ -120,7 +134,7 @@ export default function Game({
             });
           }}
         ></button>
-        {levelComplete && !gameComplete ? (
+        {levelComplete && !showGameOver ? (
           <button
             id="nextLevelButton"
             onClick={() => dispatchGameState({action: "nextLevel"})}

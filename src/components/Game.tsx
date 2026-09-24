@@ -115,6 +115,7 @@ export default function Game({
           disabled={fishHistory.length === 1}
           onClick={() => {
             dispatchGameState({action: "reset"});
+            setSwipeDirection("right");
             setResetKey((previous) => previous + 1);
           }}
         ></button>

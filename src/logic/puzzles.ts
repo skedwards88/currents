@@ -91,8 +91,8 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
   },
   {
     maxSwipes: 5,
-    puzzleString: "1R5F4CCR1RN3FCN3NF",
-    //Section: Rock and Slipstream, Solution: LUDRR, Intent: Harder Puzzle
+    puzzleString: "7E3FRC3E3CRF3W",
+    //Section: Rock and Slipstream, Solution: LDRRU, Intent: Rocks forcing slipstream use
   },
   {
     maxSwipes: 2,
@@ -103,6 +103,11 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
     maxSwipes: 4,
     puzzleString: "19C2CFF2FRC2FC",
     //Section: Edge, Solution: DDRU, Intent: Advanced edge blocking
+  },
+  {
+    maxSwipes: 5,
+    puzzleString: "3CR3NC4R3FF",
+    //Section: Edge, Solution: LUURR, Intent: Use edge to backup fish, allowing move out of slipstream
   },
   {
     maxSwipes: 5,
@@ -135,11 +140,6 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
     //Section: Whirlpool, Solution: LDUD, Intent: Harder Puzzle
   },
   {
-    maxSwipes: 5,
-    puzzleString: "F5PC9C4P5F",
-    //Section: Whirlpool, Solution: ULDRL, Intent: Applies whirlpool + edge
-  },
-  {
     maxSwipes: 4,
     puzzleString: "9C3PC1FFRC3PN3F",
     //Section: Whirlpool, Solution: URRR, Intent: Harder puzzle, applies most concepts
@@ -150,14 +150,14 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
     //Section: Whirlpool, Solution: URRDR, Intent: Hardest puzzle, applies most concepts
   },
   {
-    maxSwipes: 5,
-    puzzleString: "3CR3NC4R3FF",
-    //Section: Advanced, Solution: LUURR, Intent: Use edge to backup fish, allowing move out of slipstream
+    maxSwipes: 4,
+    puzzleString: "11PF3F1F3CP2C1C",
+    //Section: Advanced, Solution: DLRD, Intent: Double whirlpool, what does it mean?
   },
   {
-    maxSwipes: 5,
-    puzzleString: "7E3FRC3E3CRF3W",
-    //Section: Advanced, Solution: LDRRU, Intent: Rocks forcing slipstream use
+    maxSwipes: 4,
+    puzzleString: "6C5C4PC7FPF3F",
+    //Section: Advanced, Solution: RULU, Intent: Double whirlpool, what does it mean?
   },
   {
     maxSwipes: 4,
@@ -165,9 +165,29 @@ export const puzzles: {maxSwipes: number; puzzleString: string}[] = [
     //Section: Advanced, Solution: LRDD, Intent: Slipstream mania!
   },
   {
+    maxSwipes: 5,
+    puzzleString: "F5PC9C4P5F",
+    //Section: Advanced, Solution: ULDRL, Intent: Applies whirlpool + edge
+  },
+  {
+    maxSwipes: 5,
+    puzzleString: "1R5F4CCR1RN3FCN3NF",
+    //Section: Advanced, Solution: LUDRR, Intent: Harder Puzzle
+  },
+  {
+    maxSwipes: 5,
+    puzzleString: "12EC2F1R2RCF2F2R2EC",
+    //Section: Advanced, Solution: URDLL, Intent: Harder Puzzle
+  },
+  {
     maxSwipes: 7,
     puzzleString: "6C5F3RFC3F3C",
     //Section: Advanced, Solution: LDUUDLR, Intent: 3 fish, all using 1 rock
+  },
+  {
+    maxSwipes: 6,
+    puzzleString: "6C1PC1FR4F3P1F2C",
+    //Section: Advanced, Solution: UUUDLR/UUULDR, Intent: Harder Puzzle
   },
   {
     maxSwipes: 8,

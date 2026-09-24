@@ -87,10 +87,17 @@ export default function Game({
     };
   }, [basicLevelsComplete, bonusLevelsComplete, isOnBonusLevel]);
 
-  const progress =
-    levelComplete && level === puzzles.length
+  let progress = 0;
+  if (!isOnBonusLevel) {
+    progress = basicLevelsComplete
       ? 100
-      : ((level - 1) / puzzles.length) * 100;
+      : ((level - 1) / (firstBonusLevel - 1)) * 100;
+  } else {
+    progress = bonusLevelsComplete
+      ? 100
+      : ((level - firstBonusLevel) / (puzzles.length - firstBonusLevel + 1)) *
+        100;
+  }
 
   return showGameOver && delayElapsed ? (
     <GameOver

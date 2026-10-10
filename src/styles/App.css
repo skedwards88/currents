@@ -2,7 +2,7 @@ html {
   --square-size: min(19vw, 10vh);
   --default-font-size: clamp(20px, 3.5vh, 27px);
   --dark-color: rgb(14 9 171);
-  --light-color: rgb(30, 218, 255);
+  --light-color: rgb(30 218 255);
 
   background-color: var(--dark-color);
   color: white;

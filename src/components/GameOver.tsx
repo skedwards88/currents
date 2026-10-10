@@ -1,7 +1,6 @@
 import React from "react";
 import {useMetadataContext} from "@skedwards88/shared-components/src/components/MetadataContextProvider";
 import Share from "@skedwards88/shared-components/src/components/Share";
-import logo from "../images/favicon/favicon_color_transparent.svg";
 import {type ReducerPayload} from "../logic/gameReducer";
 import {sendAnalyticsCF} from "@skedwards88/shared-components/src/logic/sendAnalyticsCF";
 import {
@@ -31,7 +30,7 @@ export default function GameOver({
   return (
     <div id="gameOver" className="App info">
       <p>{congratsText}</p>
-      <img src={logo} alt="Currents logo" id="logo" />
+      <div id="logo"></div>
       <div>
         {!bonusLevelsComplete ? (
           <button

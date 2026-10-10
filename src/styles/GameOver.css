@@ -7,8 +7,78 @@
 #gameOver > #logo {
   height: 60vmin;
   aspect-ratio: 1;
+  position: relative;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  box-sizing: border-box;
+  background-image: url("../images/icons/coralLower-hires.webp");
+}
+
+#gameOver > #logo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  animation: fishSwimHighRes 1.2s steps(1, end) infinite;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: calc(100% - 10px);
+  z-index: 1;
+}
+
+#gameOver > #logo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../images/icons/coralUpper-hires.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: calc(100% - 10px);
+  z-index: 2;
 }
 
 #gameOver > p {
   margin: 0.8em 0.3em 0.3em;
+}
+
+@keyframes fishSwimHighRes {
+  0% {
+    background-image: url("../images/icons/fishC-hires.webp");
+    transform: rotateX(0deg);
+  }
+
+  12.5% {
+    background-image: url("../images/icons/fishB-hires.webp");
+    transform: rotateX(0deg);
+  }
+
+  25% {
+    background-image: url("../images/icons/fishA-hires.webp");
+    transform: rotateX(0deg);
+  }
+
+  37.5% {
+    background-image: url("../images/icons/fishB-hires.webp");
+    transform: rotateX(180deg);
+  }
+
+  50% {
+    background-image: url("../images/icons/fishC-hires.webp");
+    transform: rotateX(180deg);
+  }
+
+  62.5% {
+    background-image: url("../images/icons/fishB-hires.webp");
+    transform: rotateX(180deg);
+  }
+
+  75% {
+    background-image: url("../images/icons/fishA-hires.webp");
+    transform: rotateX(0deg);
+  }
+
+  87.5% {
+    background-image: url("../images/icons/fishB-hires.webp");
+    transform: rotateX(0deg);
+  }
 }

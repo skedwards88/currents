@@ -97,12 +97,14 @@ function FishSquare({
   containsFish,
   direction,
   ref,
+  animateSwim,
 }: {
   containsFish: boolean;
   direction: Direction | undefined;
   ref: React.Ref<HTMLDivElement>;
+  animateSwim: boolean;
 }): React.JSX.Element {
-  const className = `square ${direction ?? ""} ${containsFish ? "fish" : ""}`;
+  const className = `square ${direction ?? ""} ${containsFish ? "fish" : ""} ${animateSwim ? "swim" : ""}`;
 
   return <div className={className} ref={ref}></div>;
 }
@@ -154,6 +156,9 @@ export default function Board({
 
   const [isSwiping, setIsSwiping] = React.useState(false);
 
+  const [currentlyAnimatingCount, setCurrentlyAnimatingCount] =
+    React.useState(0);
+
   const finalDirectionByIndex: Map<number, Direction> = new Map();
   animationPaths?.forEach((path) => {
     const finalIndex = path[path.length - 1];
@@ -173,7 +178,7 @@ export default function Board({
       const squareWidth = boardWidth / numColumns;
 
       const animations = animationPaths
-        ?.map((path) =>
+        .map((path) =>
           getKeyframesForPath({path, squareWidth, puzzle, swipeDirection}),
         )
         .join("\n");
@@ -195,13 +200,18 @@ export default function Board({
 
         finalSquareElement.style.willChange = "transform";
 
+        setCurrentlyAnimatingCount((previous) => previous + 1);
+
         const onEnd = (): void => {
           finalSquareElement.style.animation = "";
           finalSquareElement.style.willChange = "";
           finalSquareElement.removeEventListener("animationend", onEnd);
+          finalSquareElement.removeEventListener("animationcancel", onEnd);
+          setCurrentlyAnimatingCount((previous) => previous - 1);
         };
 
         finalSquareElement.addEventListener("animationend", onEnd);
+        finalSquareElement.addEventListener("animationcancel", onEnd);
       });
     },
   );
@@ -302,6 +312,10 @@ export default function Board({
     <FishSquare
       containsFish={fishIndexes.includes(index)}
       direction={isSwiping ? swipeDirection : finalDirectionByIndex.get(index)}
+      animateSwim={
+        (isSwiping && maxSwipes - (fishHistory.length - 1) > 0) ||
+        currentlyAnimatingCount > 0
+      }
       key={index}
       ref={squareRefCallbacks[index]}
     ></FishSquare>
@@ -334,6 +348,7 @@ export default function Board({
           event.currentTarget.getBoundingClientRect().width / 10;
 
         if (Math.abs(dx) < threshold && Math.abs(dy) < threshold) {
+          setIsSwiping(false);
           return;
         }
 

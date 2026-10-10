@@ -67,67 +67,166 @@ button:disabled {
 }
 
 .square.coral {
-  background-image: url("../images/coral.png");
+  position: relative;
+}
+
+.square.coral::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../images/icons/coralUpper.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: calc(100% - 10px);
+  z-index: 2;
+}
+
+.square.coral::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../images/icons/coralLower.webp");
+  background-position: center;
+  background-repeat: no-repeat;
   background-size: calc(100% - 10px);
 }
 
 .square.rock {
-  background-image: url("../images/rock.png");
+  background-image: url("../images/icons/rock.webp");
   background-size: calc(100% - 10px);
 }
 
 .square.whirlpool {
-  background-image: url("../images/whirlpool.png");
+  background-image: url("../images/icons/whirlpool.webp");
   background-size: calc(100% - 10px);
+  animation: spin 5s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.square.streamUp,
+.square.streamDown,
+.square.streamLeft,
+.square.streamRight {
+  background-size: calc(100% - 10px);
+  animation: streamFlow 0.6s steps(1, end) infinite;
 }
 
 .square.streamUp {
-  background-image: url("../images/stream.png");
-  background-size: calc(100% - 10px);
+  transform: rotate(0deg);
 }
 
 .square.streamDown {
-  background-image: url("../images/stream.png");
-  background-size: calc(100% - 10px);
   transform: rotate(180deg);
 }
 
 .square.streamLeft {
-  background-image: url("../images/stream.png");
-  background-size: calc(100% - 10px);
   transform: rotate(270deg);
 }
 
 .square.streamRight {
-  background-image: url("../images/stream.png");
-  background-size: calc(100% - 10px);
   transform: rotate(90deg);
+}
+
+@keyframes streamFlow {
+  0% {
+    background-image: url("../images/icons/streamA.webp");
+  }
+
+  25% {
+    background-image: url("../images/icons/streamB.webp");
+  }
+
+  50% {
+    background-image: url("../images/icons/streamC.webp");
+  }
+
+  75% {
+    background-image: url("../images/icons/streamB.webp");
+  }
+}
+
+@keyframes fishSwim {
+  0% {
+    background-image: url("../images/icons/fishC.webp");
+    transform: rotateX(0deg);
+  }
+
+  12.5% {
+    background-image: url("../images/icons/fishB.webp");
+    transform: rotateX(0deg);
+  }
+
+  25% {
+    background-image: url("../images/icons/fishA.webp");
+    transform: rotateX(0deg);
+  }
+
+  37.5% {
+    background-image: url("../images/icons/fishB.webp");
+    transform: rotateX(180deg);
+  }
+
+  50% {
+    background-image: url("../images/icons/fishC.webp");
+    transform: rotateX(180deg);
+  }
+
+  62.5% {
+    background-image: url("../images/icons/fishB.webp");
+    transform: rotateX(180deg);
+  }
+
+  75% {
+    background-image: url("../images/icons/fishA.webp");
+    transform: rotateX(0deg);
+  }
+
+  87.5% {
+    background-image: url("../images/icons/fishB.webp");
+    transform: rotateX(0deg);
+  }
 }
 
 .square.fish {
   position: relative;
+  z-index: 1;
 }
 
 .square.fish::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("../images/fish.png");
+  background-image: url("../images/icons/fishA.webp");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: calc(100% - 10px);
+  background-size: contain;
+  z-index: 1;
 }
 
+.square.fish.swim::after {
+  animation: fishSwim 1.2s steps(1, end) infinite;
+}
+
+/* Use rotate/scale instead of transform to not conflict with the animation */
 .square.fish.down::after {
-  transform: rotate(90deg);
+  rotate: 90deg;
 }
 
 .square.fish.up::after {
-  transform: rotate(270deg);
+  rotate: -90deg;
 }
 
 .square.fish.left::after {
-  transform: rotateY(180deg);
+  scale: -1 1;
 }
 
 .errorText {
@@ -143,7 +242,6 @@ button:disabled {
   height: 1vh;
   width: calc(var(--square-size) * 4.5);
   justify-self: center;
-  background-color: #d9a4ed;
   background-color: var(--dark-color);
   display: grid;
   grid-template-columns: 1fr;
@@ -169,7 +267,7 @@ button:disabled {
   transform: translate(50%, -50%);
   height: calc(var(--square-size) * 0.6);
   aspect-ratio: 1;
-  background-image: url("../images/fish.png");
+  background-image: url("../images/icons/fishA.webp");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -183,9 +281,20 @@ button:disabled {
   transform: translate(40%, -70%);
   height: calc(var(--square-size) * 0.5);
   aspect-ratio: 1;
-  background-image: url("../images/coral.png");
+  background-image: url("../images/icons/coralLower.webp");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
   pointer-events: none;
+}
+
+#progressCoral::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("../images/icons/coralUpper.webp");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  z-index: 2;
 }

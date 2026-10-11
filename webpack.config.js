@@ -58,6 +58,14 @@ module.exports = (env, argv) => {
         from: "./src/images/favicon/favicon_color_512.png",
         to: "./assets/favicon_color_512.png",
       },
+      {
+        from: "./src/images/favicon/favicon_bw_192.png",
+        to: "./assets/favicon_bw_192.png",
+      },
+      {
+        from: "./src/images/favicon/favicon_bw_512.png",
+        to: "./assets/favicon_bw_512.png",
+      },
     ],
     options: {
       concurrency: 100,

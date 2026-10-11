@@ -1,6 +1,6 @@
 import {type Direction} from "../components/Board";
 import {numColumns, numRows} from "./gameInit";
-import {indexToRow} from "./indexToRow";
+import {indexToRow} from "@skedwards88/word_logic";
 
 export function getNextIndex(index: number, direction: Direction): number {
   if (index < 0 || index >= numColumns * numRows) {

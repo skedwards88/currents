@@ -1,6 +1,6 @@
 import {type Direction} from "../components/Board";
-import {indexToColumn} from "./indexToColumn";
-import {indexToRow} from "./indexToRow";
+import {indexToColumn} from "@skedwards88/word_logic";
+import {indexToRow} from "@skedwards88/word_logic";
 
 export function getDirectionBetweenIndexes(
   fromIndex: number,

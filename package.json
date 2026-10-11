@@ -29,7 +29,7 @@
   "homepage": "https://github.com/skedwards88/currents#readme",
   "dependencies": {
     "@skedwards88/shared-components": "^0.1.5",
-    "@skedwards88/word_logic": "^4.0.9",
+    "@skedwards88/word_logic": "^4.0.12",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

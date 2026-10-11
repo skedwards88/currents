@@ -44,4 +44,26 @@ describe("puzzle validation", () => {
       });
     });
   });
+
+  test("snapshot of animation steps", () => {
+    puzzles.forEach((puzzleData) => {
+
+      const [puzzle, startingFishIndexes] = convertStringToPuzzleAndFishIndexes(
+        puzzleData.puzzleString,
+      );
+
+      const maxSwipes = puzzleData.maxSwipes;
+
+      const solutions = findAllSolutions({
+        startingFishIndexes,
+        puzzle,
+        maxSwipes,
+      });
+
+      solutions.forEach(({fishHistory, animationSteps}) => {
+        expect(animationSteps).toMatchSnapshot();
+        expect(fishHistory).toMatchSnapshot();
+      });
+    });
+  });
 });

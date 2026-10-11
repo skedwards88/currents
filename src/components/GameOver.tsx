@@ -50,7 +50,7 @@ export default function GameOver({
           content="Share"
           userId={userId}
           sessionId={sessionId}
-          onClickAddendum={() => setBonusUnlocked(true)}
+          runAfterShare={() => setBonusUnlocked(true)}
         />
         <button onClick={() => dispatchGameState({action: "replay"})}>
           Replay

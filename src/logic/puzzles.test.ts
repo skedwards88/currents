@@ -47,7 +47,6 @@ describe("puzzle validation", () => {
 
   test("snapshot of animation steps", () => {
     puzzles.forEach((puzzleData) => {
-
       const [puzzle, startingFishIndexes] = convertStringToPuzzleAndFishIndexes(
         puzzleData.puzzleString,
       );
